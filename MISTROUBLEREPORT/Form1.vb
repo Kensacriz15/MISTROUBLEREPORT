@@ -75,12 +75,18 @@ Public Class Form1
 
     Private Sub btn_Submit_Click(sender As Object, e As EventArgs) Handles btn_Submit.Click
         Dim startDate As DateTime = DateTime.Now
-        Dim name As String = txt_Name.Text
+        Dim name As String = txt_Name.Text.Trim()
         Dim ticketNumber As String = txt_ticketnumber.Text
         Dim description As String = txt_Description.Text
         Dim level As String = Nothing
         Dim completedDate As DateTime? = Nothing
         Dim riskRating As String = Nothing
+
+        ' Validate the name field
+        If String.IsNullOrWhiteSpace(name) Then
+            MessageBox.Show("Please enter a name.", "Submit Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
 
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
