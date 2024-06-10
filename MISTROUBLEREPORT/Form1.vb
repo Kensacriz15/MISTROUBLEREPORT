@@ -78,7 +78,7 @@ Public Class Form1
         Dim name As String = txt_Name.Text
         Dim ticketNumber As String = txt_ticketnumber.Text
         Dim description As String = txt_Description.Text
-        Dim level As String = "Low Impact"
+        Dim level As String = Nothing
         Dim completedDate As DateTime? = Nothing
         Dim riskRating As String = Nothing
 
@@ -88,13 +88,13 @@ Public Class Form1
             Dim query As String = "INSERT INTO tb_MIS (start_date, name, ticket_number, description, level, completed_date, risk_rating) VALUES (@start_date, @name, @ticket_number, @description, @level, @completed_date, @risk_rating)"
 
             Using command As New MySqlCommand(query, connection)
-                command.Parameters.AddWithValue("@start_date", startDate)
+                command.Parameters.AddWithValue("@start_date", startDate.ToString("yyyy-MM-dd hh:mm:ss tt"))
                 command.Parameters.AddWithValue("@name", name)
                 command.Parameters.AddWithValue("@ticket_number", ticketNumber)
                 command.Parameters.AddWithValue("@description", description)
-                command.Parameters.AddWithValue("@level", level)
-                command.Parameters.AddWithValue("@completed_date", If(completedDate.HasValue, completedDate.Value, DBNull.Value))
-                command.Parameters.AddWithValue("@risk_rating", If(String.IsNullOrEmpty(riskRating), DBNull.Value, riskRating))
+                command.Parameters.AddWithValue("@level", DBNull.Value)
+                command.Parameters.AddWithValue("@completed_date", DBNull.Value)
+                command.Parameters.AddWithValue("@risk_rating", DBNull.Value)
 
                 command.ExecuteNonQuery()
             End Using
