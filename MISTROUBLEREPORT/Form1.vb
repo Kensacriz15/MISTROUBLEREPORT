@@ -9,6 +9,24 @@ Public Class Form1
         MaximizeBox = False
         combo_Department.SelectedIndex = 0
         combo_RiskRating.SelectedIndex = 0
+
+        Using connection As New MySqlConnection("server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;")
+            connection.Open()
+
+            Dim query As String = "SELECT * FROM tb_MIS"
+
+            Using command As New MySqlCommand(query, connection)
+
+                Dim table As New DataTable()
+
+                Dim adapter As New MySqlDataAdapter(command)
+                adapter.Fill(table)
+
+                DataGridView2.DataSource = table
+            End Using
+
+            connection.Close()
+        End Using
     End Sub
 
     Private Sub btn_CreateTicket_Click(sender As Object, e As EventArgs) Handles btn_CreateTicket.Click
@@ -172,6 +190,10 @@ Public Class Form1
     End Sub
 
     Private Sub txt_find2_TextChanged(sender As Object, e As EventArgs) Handles txt_find2.TextChanged
+
+    End Sub
+
+    Private Sub DataGridView2_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView2.CellContentClick
 
     End Sub
 
