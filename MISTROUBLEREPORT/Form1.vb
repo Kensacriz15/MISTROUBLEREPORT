@@ -7,6 +7,8 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TabControl1.Anchor = AnchorStyles.Top Or AnchorStyles.Left
         MaximizeBox = False
+        combo_Department.SelectedIndex = 0
+        combo_RiskRating.SelectedIndex = 0
     End Sub
 
     Private Sub btn_CreateTicket_Click(sender As Object, e As EventArgs) Handles btn_CreateTicket.Click
@@ -17,8 +19,15 @@ Public Class Form1
         TabControl1.SelectedIndex = 1
     End Sub
 
+    Dim correctPassword As String = "admin"
     Private Sub btn_Print_Click(sender As Object, e As EventArgs) Handles btn_Print.Click
-        TabControl1.SelectedIndex = 2
+        Dim inputPassword As String = InputBox("Enter the password:", "Password Required")
+
+        If inputPassword = correctPassword Then
+            TabControl1.SelectedIndex = 2
+        Else
+            MessageBox.Show("Incorrect password. Access denied.", "Password Incorrect", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 
     Private Sub btn_Settings_Click(sender As Object, e As EventArgs) Handles btn_Settings.Click
@@ -30,10 +39,14 @@ Public Class Form1
     Dim ticketCounter As Integer = 0
 
     Private Sub combo_Department_SelectedIndexChanged(sender As Object, e As EventArgs) Handles combo_Department.SelectedIndexChanged
-        Dim currentDate As String = DateTime.Now.ToString("ddMMyyyy")
-        Dim departmentInitials As String = combo_Department.SelectedItem.ToString().Substring(0, 2)
-        Dim ticketNumber As String = currentDate & departmentInitials & GetNextTicketNumber().ToString()
-        txt_ticketnumber.Text = ticketNumber
+        If combo_Department.SelectedItem.ToString() = "Select Department" Then
+            txt_ticketnumber.Clear()
+        Else
+            Dim currentDate As String = DateTime.Now.ToString("ddMMyyyy")
+            Dim departmentInitials As String = combo_Department.SelectedItem.ToString().Substring(0, 2)
+            Dim ticketNumber As String = currentDate & departmentInitials & GetNextTicketNumber().ToString()
+            txt_ticketnumber.Text = ticketNumber
+        End If
     End Sub
 
     Private Function GetNextTicketNumber() As Integer
@@ -65,12 +78,15 @@ Public Class Form1
 
     End Sub
 
-    Private Sub txt_Description_TextChanged(sender As Object, e As EventArgs) Handles txt_Description.TextChanged
-
+    Private Sub txt_Description_Enter(sender As Object, e As EventArgs) Handles txt_Description.Enter
+        If txt_Description.Text = "Type here" Then
+            txt_Description.Text = ""
+            txt_Description.ForeColor = Color.Black
+        End If
     End Sub
 
     Private Sub txt_ticketnumber_TextChanged(sender As Object, e As EventArgs) Handles txt_ticketnumber.TextChanged
-
+        txt_ticketnumber.ShortcutsEnabled = True
     End Sub
 
     Private Sub btn_Submit_Click(sender As Object, e As EventArgs) Handles btn_Submit.Click
@@ -78,9 +94,6 @@ Public Class Form1
         Dim name As String = txt_Name.Text.Trim()
         Dim ticketNumber As String = txt_ticketnumber.Text
         Dim description As String = txt_Description.Text
-        Dim level As String = Nothing
-        Dim completedDate As DateTime? = Nothing
-        Dim riskRating As String = Nothing
 
         ' Validate the name field
         If String.IsNullOrWhiteSpace(name) Then
@@ -91,16 +104,13 @@ Public Class Form1
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
 
-            Dim query As String = "INSERT INTO tb_MIS (start_date, name, ticket_number, description, level, completed_date, risk_rating) VALUES (@start_date, @name, @ticket_number, @description, @level, @completed_date, @risk_rating)"
+            Dim query As String = "INSERT INTO tb_MIS (start_date, name, ticket_number, description) VALUES (@start_date, @name, @ticket_number, @description)"
 
             Using command As New MySqlCommand(query, connection)
                 command.Parameters.AddWithValue("@start_date", startDate.ToString("yyyy-MM-dd hh:mm:ss tt"))
                 command.Parameters.AddWithValue("@name", name)
                 command.Parameters.AddWithValue("@ticket_number", ticketNumber)
                 command.Parameters.AddWithValue("@description", description)
-                command.Parameters.AddWithValue("@level", DBNull.Value)
-                command.Parameters.AddWithValue("@completed_date", DBNull.Value)
-                command.Parameters.AddWithValue("@risk_rating", DBNull.Value)
 
                 command.ExecuteNonQuery()
             End Using
@@ -118,9 +128,52 @@ Public Class Form1
     End Sub
 
 
+
 #End Region
 
 #Region "Tab2"
+    Private Sub btn_find1_Click(sender As Object, e As EventArgs) Handles btn_find1.Click
+        Dim searchValue As String = txt_find2.Text.Trim()
+
+        Dim query As String = "SELECT * FROM tb_MIS WHERE ticket_number = @searchValue"
+
+        Using connection As New MySqlConnection(connectionString)
+            connection.Open()
+
+            Using command As New MySqlCommand(query, connection)
+                command.Parameters.AddWithValue("@searchValue", searchValue)
+
+                Dim adapter As New MySqlDataAdapter(command)
+                Dim table As New DataTable()
+                adapter.Fill(table)
+
+                ' Display the ticket information if found
+                If table.Rows.Count > 0 Then
+                    Dim row As DataRow = table.Rows(0)
+                    Dim ticketNumber As String = row("ticket_number").ToString()
+                    Dim startDate As DateTime = Convert.ToDateTime(row("start_date"))
+                    Dim name As String = row("name").ToString()
+                    Dim description As String = row("description").ToString()
+
+                    ' Display the ticket information in a message box or any other desired way
+                    Dim ticketInfo As String = $"Ticket Number: {ticketNumber}{Environment.NewLine}" &
+                                           $"Start Date: {startDate}{Environment.NewLine}" &
+                                           $"Name: {name}{Environment.NewLine}" &
+                                           $"Description: {description}"
+                    MessageBox.Show(ticketInfo, "Ticket Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Else
+                    ' Display a message if no ticket information is found
+                    MessageBox.Show("Ticket not found.", "Ticket Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+            End Using
+
+            connection.Close()
+        End Using
+    End Sub
+
+    Private Sub txt_find2_TextChanged(sender As Object, e As EventArgs) Handles txt_find2.TextChanged
+
+    End Sub
 
 #End Region
 
@@ -132,8 +185,6 @@ Public Class Form1
 
 #End Region
 
-    Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
 
-    End Sub
 
 End Class
