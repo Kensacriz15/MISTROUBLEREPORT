@@ -1,34 +1,39 @@
 ﻿Imports MySql.Data.MySqlClient
-
+Imports System.Data
 
 Public Class Form1
     Dim connectionString As String = "server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;"
+    Private activeFilter As String = "all"
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TabControl1.Anchor = AnchorStyles.Top Or AnchorStyles.Left
         MaximizeBox = False
         combo_Department.SelectedIndex = 0
         combo_RiskRating.SelectedIndex = 0
-
-        Using connection As New MySqlConnection("server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;")
-            connection.Open()
-
-            Dim query As String = "SELECT * FROM tb_MIS"
-
-            Using command As New MySqlCommand(query, connection)
-
-                Dim table As New DataTable()
-
-                Dim adapter As New MySqlDataAdapter(command)
-                adapter.Fill(table)
-
-                DataGridView2.DataSource = table
-            End Using
-
-            connection.Close()
-        End Using
+        LoadData() ' Load data initially
     End Sub
 
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Timer1.Stop() ' Stop the timer
+        If activeFilter = "all" Then
+            Dim query As String = "SELECT * FROM tb_MIS"
+
+            Using connection As New MySqlConnection("server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;")
+                connection.Open()
+
+                Using command As New MySqlCommand(query, connection)
+                    Dim table As New DataTable()
+                    Dim adapter As New MySqlDataAdapter(command)
+                    adapter.Fill(table)
+
+                    DataGridView2.DataSource = table
+                End Using
+
+                connection.Close()
+            End Using
+        End If
+        Timer1.Start() ' Restart the timer
+    End Sub
     Private Sub btn_CreateTicket_Click(sender As Object, e As EventArgs) Handles btn_CreateTicket.Click
         TabControl1.SelectedIndex = 0
     End Sub
@@ -133,6 +138,12 @@ Public Class Form1
                 command.ExecuteNonQuery()
             End Using
 
+            ' Refresh the DataGridView
+            Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_MIS", connection)
+            Dim table As New DataTable()
+            adapter.Fill(table)
+            DataGridView2.DataSource = table
+
             connection.Close()
         End Using
 
@@ -193,13 +204,275 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridView2_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView2.CellContentClick
 
-    End Sub
+
+
+
+
+
 
 #End Region
 
 #Region "Tab3"
+    'Add Information in tb_MIS
+    'wHEN i select in gridbox it will automatic show ticket number
+    'and Add information such as trouble time and completed time
+    'i have level low impact, negligible, moderate and critical this would be based on trouble_time and completed time
+    '0-30 mins low impact, 1 to 2hrs neglible , 2 to 3hrs moderate lastly critiacal 3hrs and up
+    'lastly risk taking combo box but leave at it should be
+
+    Private Sub DataGridView2_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView2.SelectionChanged
+        If DataGridView2.SelectedRows.Count > 0 Then
+            txt_id.Text = DataGridView2.SelectedRows(0).Cells("id").Value.ToString()
+            txt_inputticket.Text = DataGridView2.SelectedRows(0).Cells("ticket_number").Value.ToString()
+            txt_TroubleTime.Text = DataGridView2.SelectedRows(0).Cells("trouble_time").Value.ToString()
+            txt_CompletedTime.Text = DataGridView2.SelectedRows(0).Cells("completed_time").Value.ToString()
+            txt_Level.Text = DataGridView2.SelectedRows(0).Cells("level").Value.ToString()
+            combo_RiskRating.Text = DataGridView2.SelectedRows(0).Cells("risk_rating").Value.ToString()
+        End If
+    End Sub
+
+    Private Sub UpdateIDFromTicketNumber(ticketNumber As String)
+        ' Search for the ID based on the entered ticket number
+        For Each row As DataGridViewRow In DataGridView2.Rows
+            If row.Cells("ticket_number").Value.ToString() = ticketNumber Then
+                txt_id.Text = row.Cells("id").Value.ToString()
+                Exit Sub ' Exit loop once the ID is found
+            End If
+        Next
+
+        ' If the ticket number is not found, clear the ID textbox
+        txt_id.Text = ""
+    End Sub
+    Private Sub txt_id_TextChanged(sender As Object, e As EventArgs) Handles txt_id.TextChanged
+
+    End Sub
+
+    Private Sub txt_inputticket_TextChanged(sender As Object, e As EventArgs) Handles txt_inputticket.TextChanged
+        ' Call the function to update the ID when the ticket number is changed
+        UpdateIDFromTicketNumber(txt_inputticket.Text)
+    End Sub
+
+    Private Sub CalculateLevel()
+        ' Get the trouble time and completed time entered by the user
+        Dim troubleTime As DateTime
+        Dim completedTime As DateTime
+
+        If DateTime.TryParse(txt_TroubleTime.Text, troubleTime) AndAlso DateTime.TryParse(txt_CompletedTime.Text, completedTime) Then
+            ' Calculate the time duration in minutes
+            Dim timeDuration As TimeSpan = completedTime - troubleTime
+            Dim durationInMinutes As Integer = CInt(timeDuration.TotalMinutes)
+
+            ' Determine the level based on the time duration
+            Dim level As String = ""
+
+            If durationInMinutes <= 30 Then
+                level = "Low Impact"
+            ElseIf durationInMinutes > 30 AndAlso durationInMinutes <= 120 Then
+                level = "Negligible"
+            ElseIf durationInMinutes > 120 AndAlso durationInMinutes <= 180 Then
+                level = "Moderate"
+            Else
+                level = "Critical"
+            End If
+
+            ' Update the txt_Level text box with the calculated level
+            txt_Level.Text = level
+
+        End If
+    End Sub
+
+    Private Sub txt_TroubleTime_TextChanged(sender As Object, e As EventArgs) Handles txt_TroubleTime.TextChanged
+        ' Call the CalculateLevel function whenever the trouble time is changed
+        CalculateLevel()
+    End Sub
+
+    Private Sub txt_CompletedTime_TextChanged(sender As Object, e As EventArgs) Handles txt_CompletedTime.TextChanged
+        ' Call the CalculateLevel function whenever the completed time is changed
+        CalculateLevel()
+    End Sub
+    Private Sub txt_Level_TextChanged(sender As Object, e As EventArgs) Handles txt_Level.TextChanged
+
+    End Sub
+
+    Private Sub combo_RiskRating_SelectedIndexChanged(sender As Object, e As EventArgs) Handles combo_RiskRating.SelectedIndexChanged
+
+    End Sub
+
+
+    Private Sub btn_Save2_Click(sender As Object, e As EventArgs) Handles btn_Save2.Click
+        ' Establish database connection
+        Dim connectionString As String = "server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;"
+
+        Using connection As New MySqlConnection(connectionString)
+            connection.Open()
+
+            ' Check if the ticket number exists in the database
+            Dim queryCheckTicket As String = "SELECT COUNT(*) FROM tb_MIS WHERE ticket_number = @ticket_number"
+            Dim ticketExists As Boolean = False
+
+            Using commandCheckTicket As New MySqlCommand(queryCheckTicket, connection)
+                commandCheckTicket.Parameters.AddWithValue("@ticket_number", txt_inputticket.Text)
+
+                Dim countTicket As Integer = Convert.ToInt32(commandCheckTicket.ExecuteScalar())
+                ticketExists = (countTicket > 0)
+            End Using
+
+            If Not ticketExists Then
+                MessageBox.Show("The ticket number does not exist in the database. Cannot save the data.")
+                connection.Close()
+                Return
+            End If
+
+            ' Check if the record with the same ID already exists
+            Dim queryCheck As String = "SELECT COUNT(*) FROM tb_MIS WHERE id = @id"
+            Dim recordExists As Boolean = False
+
+            Using commandCheck As New MySqlCommand(queryCheck, connection)
+                commandCheck.Parameters.AddWithValue("@id", txt_id.Text)
+
+                Dim count As Integer = Convert.ToInt32(commandCheck.ExecuteScalar())
+                recordExists = (count > 0)
+            End Using
+
+            ' Construct the SQL insert or update query based on record existence
+            Dim query As String = ""
+            If recordExists Then
+                query = "UPDATE tb_MIS SET ticket_number = @ticket_number, trouble_time = @trouble_time, completed_date = @completed_date, level = @level, risk_rating = @risk_rating WHERE id = @id"
+            Else
+                query = "INSERT INTO tb_MIS (id, ticket_number, trouble_time, completed_date, level, risk_rating) VALUES (@id, @ticket_number, @trouble_time, @completed_date, @level, @risk_rating)"
+            End If
+
+            ' Create and configure the MySqlCommand object
+            Using command As New MySqlCommand(query, connection)
+                command.Parameters.AddWithValue("@id", txt_id.Text)
+                command.Parameters.AddWithValue("@ticket_number", txt_inputticket.Text)
+                command.Parameters.AddWithValue("@trouble_time", txt_TroubleTime.Text)
+                command.Parameters.AddWithValue("@completed_date", txt_CompletedTime.Text)
+                Dim level As String = CalculateLevelFromTimes(txt_TroubleTime.Text, txt_CompletedTime.Text)
+                command.Parameters.AddWithValue("@level", level)
+                command.Parameters.AddWithValue("@risk_rating", combo_RiskRating.SelectedItem.ToString())
+
+                ' Execute the insert or update query
+                command.ExecuteNonQuery()
+
+                If recordExists Then
+                    MessageBox.Show("Data updated successfully.")
+                Else
+                    MessageBox.Show("Data saved successfully.")
+                End If
+
+                ' Clear the text boxes after saving
+                txt_inputticket.Text = ""
+                txt_TroubleTime.Text = ""
+                txt_CompletedTime.Text = ""
+                txt_Level.Text = ""
+                combo_RiskRating.SelectedIndex = 0
+            End Using
+
+            ' Refresh the DataGridView
+            Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_MIS", connection)
+            Dim table As New DataTable()
+            adapter.Fill(table)
+            DataGridView2.DataSource = table
+
+            connection.Close()
+        End Using
+    End Sub
+
+
+    Private Function CalculateLevelFromTimes(troubleTime As String, completedTime As String) As String
+        ' Calculate the time duration in minutes
+        Dim troubleDateTime As DateTime
+        Dim completedDateTime As DateTime
+
+        If DateTime.TryParse(troubleTime, troubleDateTime) AndAlso DateTime.TryParse(completedTime, completedDateTime) Then
+            Dim timeDuration As TimeSpan = completedDateTime - troubleDateTime
+            Dim durationInMinutes As Integer = CInt(timeDuration.TotalMinutes)
+
+            ' Determine the level based on the time duration
+            If durationInMinutes <= 30 Then
+                Return "Low Impact"
+            ElseIf durationInMinutes > 30 AndAlso durationInMinutes <= 120 Then
+                Return "Negligible"
+            ElseIf durationInMinutes > 120 AndAlso durationInMinutes <= 180 Then
+                Return "Moderate"
+            Else
+                Return "Critical"
+            End If
+        Else
+            ' Return a default level if there are parsing errors
+            Return "Unknown"
+        End If
+    End Function
+
+    Private Sub RadioToday_CheckedChanged(sender As Object, e As EventArgs) Handles RadioToday.CheckedChanged
+        If RadioToday.Checked Then
+            activeFilter = "today"
+            LoadData()
+        End If
+    End Sub
+
+    Private Sub RadioWeek_CheckedChanged(sender As Object, e As EventArgs) Handles RadioWeek.CheckedChanged
+        If RadioWeek.Checked Then
+            activeFilter = "week"
+            LoadData()
+        End If
+    End Sub
+
+    Private Sub RadioYear_CheckedChanged(sender As Object, e As EventArgs) Handles RadioYear.CheckedChanged
+        If RadioYear.Checked Then
+            activeFilter = "year"
+            LoadData()
+        End If
+    End Sub
+
+    Private Sub RadioAll_CheckedChanged(sender As Object, e As EventArgs) Handles RadioAll.CheckedChanged
+        If RadioAll.Checked Then
+            activeFilter = "all"
+            LoadData()
+        End If
+    End Sub
+
+    ' Method to Load Data Based on Active Filter
+    Private Sub LoadData()
+        FilterDataGridView(activeFilter)
+    End Sub
+
+    ' Method to Filter DataGridView Based on Filter Type
+    Private Sub FilterDataGridView(filterType As String)
+        Dim connectionString As String = "server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;"
+        Using connection As New MySqlConnection(connectionString)
+            connection.Open()
+
+            Dim query As String = "SELECT * FROM tb_MIS"
+
+            Select Case filterType
+                Case "today"
+                    query &= " WHERE DATE(start_date) = CURDATE()"
+                Case "week"
+                    query &= " WHERE YEARWEEK(start_date, 1) = YEARWEEK(CURDATE(), 1)"
+                Case "year"
+                    query &= " WHERE YEAR(start_date) = YEAR(CURDATE())"
+            End Select
+
+            Using command As New MySqlCommand(query, connection)
+                Dim table As New DataTable()
+                Dim adapter As New MySqlDataAdapter(command)
+                adapter.Fill(table)
+
+                If table.Rows.Count = 0 Then
+                    DataGridView2.DataSource = Nothing
+                Else
+                    DataGridView2.DataSource = table
+                End If
+            End Using
+
+            connection.Close()
+        End Using
+    End Sub
+
+
 
 #End Region
 

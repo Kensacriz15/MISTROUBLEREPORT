@@ -22,6 +22,7 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -49,37 +50,39 @@ Partial Class Form1
         Me.txt_find2 = New System.Windows.Forms.TextBox()
         Me.btn_find1 = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.btn_PrintTicket = New System.Windows.Forms.Button()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.btn_Save2 = New System.Windows.Forms.Button()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.txt_inputticket = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.RadioButton4 = New System.Windows.Forms.RadioButton()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.RadioButton3 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.combo_RiskRating = New System.Windows.Forms.ComboBox()
-        Me.DataGridView2 = New System.Windows.Forms.DataGridView()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.txt_Level = New System.Windows.Forms.TextBox()
-        Me.txt_CompletedTime = New System.Windows.Forms.TextBox()
         Me.txt_TroubleTime = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.txt_CompletedTime = New System.Windows.Forms.TextBox()
+        Me.txt_Level = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.btn_PrintTicket = New System.Windows.Forms.Button()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.RadioAll = New System.Windows.Forms.RadioButton()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.RadioYear = New System.Windows.Forms.RadioButton()
+        Me.RadioToday = New System.Windows.Forms.RadioButton()
+        Me.RadioWeek = New System.Windows.Forms.RadioButton()
+        Me.DataGridView2 = New System.Windows.Forms.DataGridView()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.btn_Print = New System.Windows.Forms.Button()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.btn_Save2 = New System.Windows.Forms.Button()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.txt_id = New System.Windows.Forms.TextBox()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.TabPage3.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage4.SuspendLayout()
-        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'DataGridView1
@@ -181,10 +184,10 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Controls.Add(Me.TabPage4)
-        Me.TabControl1.Location = New System.Drawing.Point(118, -22)
+        Me.TabControl1.Location = New System.Drawing.Point(118, -1)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(679, 474)
+        Me.TabControl1.Size = New System.Drawing.Size(679, 453)
         Me.TabControl1.TabIndex = 4
         '
         'TabPage1
@@ -200,7 +203,7 @@ Partial Class Form1
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(671, 448)
+        Me.TabPage1.Size = New System.Drawing.Size(671, 427)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -224,7 +227,7 @@ Partial Class Form1
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(97, 198)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(138, 16)
+        Me.Label3.Size = New System.Drawing.Size(137, 16)
         Me.Label3.TabIndex = 6
         Me.Label3.Text = "Describe the Problem"
         '
@@ -245,7 +248,7 @@ Partial Class Form1
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(242, 133)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(96, 16)
+        Me.Label2.Size = New System.Drawing.Size(95, 16)
         Me.Label2.TabIndex = 4
         Me.Label2.Text = "Ticket Number"
         '
@@ -264,7 +267,7 @@ Partial Class Form1
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(97, 65)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(45, 16)
+        Me.Label1.Size = New System.Drawing.Size(44, 16)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Name"
         '
@@ -294,7 +297,7 @@ Partial Class Form1
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(671, 429)
+        Me.TabPage2.Size = New System.Drawing.Size(671, 427)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -329,19 +332,59 @@ Partial Class Form1
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(671, 429)
+        Me.TabPage3.Size = New System.Drawing.Size(671, 427)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
-        'btn_PrintTicket
+        'Panel2
         '
-        Me.btn_PrintTicket.Location = New System.Drawing.Point(549, 193)
-        Me.btn_PrintTicket.Name = "btn_PrintTicket"
-        Me.btn_PrintTicket.Size = New System.Drawing.Size(75, 23)
-        Me.btn_PrintTicket.TabIndex = 15
-        Me.btn_PrintTicket.Text = "Print"
-        Me.btn_PrintTicket.UseVisualStyleBackColor = True
+        Me.Panel2.BackColor = System.Drawing.Color.Khaki
+        Me.Panel2.Controls.Add(Me.txt_id)
+        Me.Panel2.Controls.Add(Me.btn_Save2)
+        Me.Panel2.Controls.Add(Me.Label9)
+        Me.Panel2.Controls.Add(Me.txt_inputticket)
+        Me.Panel2.Controls.Add(Me.Label8)
+        Me.Panel2.Controls.Add(Me.combo_RiskRating)
+        Me.Panel2.Controls.Add(Me.txt_TroubleTime)
+        Me.Panel2.Controls.Add(Me.Label4)
+        Me.Panel2.Controls.Add(Me.Label6)
+        Me.Panel2.Controls.Add(Me.txt_CompletedTime)
+        Me.Panel2.Controls.Add(Me.txt_Level)
+        Me.Panel2.Controls.Add(Me.Label5)
+        Me.Panel2.Location = New System.Drawing.Point(121, 12)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(364, 215)
+        Me.Panel2.TabIndex = 13
+        '
+        'btn_Save2
+        '
+        Me.btn_Save2.BackColor = System.Drawing.Color.LimeGreen
+        Me.btn_Save2.ForeColor = System.Drawing.Color.White
+        Me.btn_Save2.Location = New System.Drawing.Point(147, 181)
+        Me.btn_Save2.Name = "btn_Save2"
+        Me.btn_Save2.Size = New System.Drawing.Size(75, 23)
+        Me.btn_Save2.TabIndex = 16
+        Me.btn_Save2.Text = "Save"
+        Me.btn_Save2.UseVisualStyleBackColor = False
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(107, 8)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(153, 16)
+        Me.Label9.TabIndex = 13
+        Me.Label9.Text = "Add Information in Ticket"
+        '
+        'txt_inputticket
+        '
+        Me.txt_inputticket.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txt_inputticket.Location = New System.Drawing.Point(119, 33)
+        Me.txt_inputticket.Name = "txt_inputticket"
+        Me.txt_inputticket.Size = New System.Drawing.Size(180, 22)
+        Me.txt_inputticket.TabIndex = 13
         '
         'Label8
         '
@@ -349,88 +392,9 @@ Partial Class Form1
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.Location = New System.Drawing.Point(17, 39)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(96, 16)
+        Me.Label8.Size = New System.Drawing.Size(95, 16)
         Me.Label8.TabIndex = 14
         Me.Label8.Text = "Ticket Number"
-        '
-        'TextBox1
-        '
-        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(119, 33)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(180, 22)
-        Me.TextBox1.TabIndex = 13
-        '
-        'Panel1
-        '
-        Me.Panel1.BackColor = System.Drawing.Color.SkyBlue
-        Me.Panel1.Controls.Add(Me.RadioButton4)
-        Me.Panel1.Controls.Add(Me.Label7)
-        Me.Panel1.Controls.Add(Me.RadioButton3)
-        Me.Panel1.Controls.Add(Me.RadioButton1)
-        Me.Panel1.Controls.Add(Me.RadioButton2)
-        Me.Panel1.Location = New System.Drawing.Point(6, 96)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(81, 131)
-        Me.Panel1.TabIndex = 12
-        '
-        'RadioButton4
-        '
-        Me.RadioButton4.AutoSize = True
-        Me.RadioButton4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton4.Location = New System.Drawing.Point(3, 106)
-        Me.RadioButton4.Name = "RadioButton4"
-        Me.RadioButton4.Size = New System.Drawing.Size(41, 20)
-        Me.RadioButton4.TabIndex = 12
-        Me.RadioButton4.TabStop = True
-        Me.RadioButton4.Text = "All"
-        Me.RadioButton4.UseVisualStyleBackColor = True
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(4, 1)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(71, 16)
-        Me.Label7.TabIndex = 9
-        Me.Label7.Text = "Show Only"
-        '
-        'RadioButton3
-        '
-        Me.RadioButton3.AutoSize = True
-        Me.RadioButton3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton3.Location = New System.Drawing.Point(3, 80)
-        Me.RadioButton3.Name = "RadioButton3"
-        Me.RadioButton3.Size = New System.Drawing.Size(55, 20)
-        Me.RadioButton3.TabIndex = 11
-        Me.RadioButton3.TabStop = True
-        Me.RadioButton3.Text = "Year"
-        Me.RadioButton3.UseVisualStyleBackColor = True
-        '
-        'RadioButton1
-        '
-        Me.RadioButton1.AutoSize = True
-        Me.RadioButton1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton1.Location = New System.Drawing.Point(3, 27)
-        Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(66, 20)
-        Me.RadioButton1.TabIndex = 8
-        Me.RadioButton1.TabStop = True
-        Me.RadioButton1.Text = "Today"
-        Me.RadioButton1.UseVisualStyleBackColor = True
-        '
-        'RadioButton2
-        '
-        Me.RadioButton2.AutoSize = True
-        Me.RadioButton2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton2.Location = New System.Drawing.Point(3, 54)
-        Me.RadioButton2.Name = "RadioButton2"
-        Me.RadioButton2.Size = New System.Drawing.Size(72, 20)
-        Me.RadioButton2.TabIndex = 10
-        Me.RadioButton2.TabStop = True
-        Me.RadioButton2.Text = "Weekly"
-        Me.RadioButton2.UseVisualStyleBackColor = True
         '
         'combo_RiskRating
         '
@@ -444,6 +408,140 @@ Partial Class Form1
         Me.combo_RiskRating.Size = New System.Drawing.Size(348, 24)
         Me.combo_RiskRating.TabIndex = 7
         '
+        'txt_TroubleTime
+        '
+        Me.txt_TroubleTime.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txt_TroubleTime.Location = New System.Drawing.Point(119, 63)
+        Me.txt_TroubleTime.Name = "txt_TroubleTime"
+        Me.txt_TroubleTime.Size = New System.Drawing.Size(180, 22)
+        Me.txt_TroubleTime.TabIndex = 0
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(27, 66)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(85, 16)
+        Me.Label4.TabIndex = 3
+        Me.Label4.Text = "TroubleTime"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(68, 121)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(40, 16)
+        Me.Label6.TabIndex = 5
+        Me.Label6.Text = "Level"
+        '
+        'txt_CompletedTime
+        '
+        Me.txt_CompletedTime.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txt_CompletedTime.Location = New System.Drawing.Point(119, 91)
+        Me.txt_CompletedTime.Name = "txt_CompletedTime"
+        Me.txt_CompletedTime.Size = New System.Drawing.Size(180, 22)
+        Me.txt_CompletedTime.TabIndex = 1
+        '
+        'txt_Level
+        '
+        Me.txt_Level.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txt_Level.Location = New System.Drawing.Point(119, 121)
+        Me.txt_Level.Name = "txt_Level"
+        Me.txt_Level.Size = New System.Drawing.Size(180, 22)
+        Me.txt_Level.TabIndex = 2
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(8, 94)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(104, 16)
+        Me.Label5.TabIndex = 4
+        Me.Label5.Text = "CompletedTime"
+        '
+        'btn_PrintTicket
+        '
+        Me.btn_PrintTicket.Location = New System.Drawing.Point(549, 193)
+        Me.btn_PrintTicket.Name = "btn_PrintTicket"
+        Me.btn_PrintTicket.Size = New System.Drawing.Size(75, 23)
+        Me.btn_PrintTicket.TabIndex = 15
+        Me.btn_PrintTicket.Text = "Print"
+        Me.btn_PrintTicket.UseVisualStyleBackColor = True
+        '
+        'Panel1
+        '
+        Me.Panel1.BackColor = System.Drawing.Color.SkyBlue
+        Me.Panel1.Controls.Add(Me.RadioAll)
+        Me.Panel1.Controls.Add(Me.Label7)
+        Me.Panel1.Controls.Add(Me.RadioYear)
+        Me.Panel1.Controls.Add(Me.RadioToday)
+        Me.Panel1.Controls.Add(Me.RadioWeek)
+        Me.Panel1.Location = New System.Drawing.Point(6, 96)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(81, 131)
+        Me.Panel1.TabIndex = 12
+        '
+        'RadioAll
+        '
+        Me.RadioAll.AutoSize = True
+        Me.RadioAll.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioAll.Location = New System.Drawing.Point(3, 106)
+        Me.RadioAll.Name = "RadioAll"
+        Me.RadioAll.Size = New System.Drawing.Size(40, 20)
+        Me.RadioAll.TabIndex = 12
+        Me.RadioAll.TabStop = True
+        Me.RadioAll.Text = "All"
+        Me.RadioAll.UseVisualStyleBackColor = True
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Location = New System.Drawing.Point(4, 1)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(70, 16)
+        Me.Label7.TabIndex = 9
+        Me.Label7.Text = "Show Only"
+        '
+        'RadioYear
+        '
+        Me.RadioYear.AutoSize = True
+        Me.RadioYear.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioYear.Location = New System.Drawing.Point(3, 80)
+        Me.RadioYear.Name = "RadioYear"
+        Me.RadioYear.Size = New System.Drawing.Size(54, 20)
+        Me.RadioYear.TabIndex = 11
+        Me.RadioYear.TabStop = True
+        Me.RadioYear.Text = "Year"
+        Me.RadioYear.UseVisualStyleBackColor = True
+        '
+        'RadioToday
+        '
+        Me.RadioToday.AutoSize = True
+        Me.RadioToday.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioToday.Location = New System.Drawing.Point(3, 27)
+        Me.RadioToday.Name = "RadioToday"
+        Me.RadioToday.Size = New System.Drawing.Size(65, 20)
+        Me.RadioToday.TabIndex = 8
+        Me.RadioToday.TabStop = True
+        Me.RadioToday.Text = "Today"
+        Me.RadioToday.UseVisualStyleBackColor = True
+        '
+        'RadioWeek
+        '
+        Me.RadioWeek.AutoSize = True
+        Me.RadioWeek.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioWeek.Location = New System.Drawing.Point(3, 54)
+        Me.RadioWeek.Name = "RadioWeek"
+        Me.RadioWeek.Size = New System.Drawing.Size(61, 20)
+        Me.RadioWeek.TabIndex = 10
+        Me.RadioWeek.TabStop = True
+        Me.RadioWeek.Text = "Week"
+        Me.RadioWeek.UseVisualStyleBackColor = True
+        '
         'DataGridView2
         '
         Me.DataGridView2.AllowUserToAddRows = False
@@ -456,67 +554,13 @@ Partial Class Form1
         Me.DataGridView2.Size = New System.Drawing.Size(659, 170)
         Me.DataGridView2.TabIndex = 6
         '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(68, 121)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(41, 16)
-        Me.Label6.TabIndex = 5
-        Me.Label6.Text = "Level"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(8, 94)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(105, 16)
-        Me.Label5.TabIndex = 4
-        Me.Label5.Text = "CompletedTime"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(27, 66)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(86, 16)
-        Me.Label4.TabIndex = 3
-        Me.Label4.Text = "TroubleTime"
-        '
-        'txt_Level
-        '
-        Me.txt_Level.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txt_Level.Location = New System.Drawing.Point(119, 121)
-        Me.txt_Level.Name = "txt_Level"
-        Me.txt_Level.Size = New System.Drawing.Size(180, 22)
-        Me.txt_Level.TabIndex = 2
-        '
-        'txt_CompletedTime
-        '
-        Me.txt_CompletedTime.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txt_CompletedTime.Location = New System.Drawing.Point(119, 91)
-        Me.txt_CompletedTime.Name = "txt_CompletedTime"
-        Me.txt_CompletedTime.Size = New System.Drawing.Size(180, 22)
-        Me.txt_CompletedTime.TabIndex = 1
-        '
-        'txt_TroubleTime
-        '
-        Me.txt_TroubleTime.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txt_TroubleTime.Location = New System.Drawing.Point(119, 63)
-        Me.txt_TroubleTime.Name = "txt_TroubleTime"
-        Me.txt_TroubleTime.Size = New System.Drawing.Size(180, 22)
-        Me.txt_TroubleTime.TabIndex = 0
-        '
         'TabPage4
         '
         Me.TabPage4.Controls.Add(Me.DataGridView1)
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(671, 429)
+        Me.TabPage4.Size = New System.Drawing.Size(671, 427)
         Me.TabPage4.TabIndex = 3
         Me.TabPage4.Text = "TabPage4"
         Me.TabPage4.UseVisualStyleBackColor = True
@@ -532,45 +576,15 @@ Partial Class Form1
         Me.btn_Print.Text = "Print"
         Me.btn_Print.UseVisualStyleBackColor = True
         '
-        'Panel2
+        'Timer1
         '
-        Me.Panel2.BackColor = System.Drawing.Color.Khaki
-        Me.Panel2.Controls.Add(Me.btn_Save2)
-        Me.Panel2.Controls.Add(Me.Label9)
-        Me.Panel2.Controls.Add(Me.TextBox1)
-        Me.Panel2.Controls.Add(Me.Label8)
-        Me.Panel2.Controls.Add(Me.combo_RiskRating)
-        Me.Panel2.Controls.Add(Me.txt_TroubleTime)
-        Me.Panel2.Controls.Add(Me.Label4)
-        Me.Panel2.Controls.Add(Me.Label6)
-        Me.Panel2.Controls.Add(Me.txt_CompletedTime)
-        Me.Panel2.Controls.Add(Me.txt_Level)
-        Me.Panel2.Controls.Add(Me.Label5)
-        Me.Panel2.Location = New System.Drawing.Point(121, 12)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(364, 215)
-        Me.Panel2.TabIndex = 13
         '
-        'Label9
+        'txt_id
         '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(107, 8)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(154, 16)
-        Me.Label9.TabIndex = 13
-        Me.Label9.Text = "Add Information in Ticket"
-        '
-        'btn_Save2
-        '
-        Me.btn_Save2.BackColor = System.Drawing.Color.LimeGreen
-        Me.btn_Save2.ForeColor = System.Drawing.Color.White
-        Me.btn_Save2.Location = New System.Drawing.Point(147, 181)
-        Me.btn_Save2.Name = "btn_Save2"
-        Me.btn_Save2.Size = New System.Drawing.Size(75, 23)
-        Me.btn_Save2.TabIndex = 16
-        Me.btn_Save2.Text = "Save"
-        Me.btn_Save2.UseVisualStyleBackColor = False
+        Me.txt_id.Location = New System.Drawing.Point(61, 7)
+        Me.txt_id.Name = "txt_id"
+        Me.txt_id.Size = New System.Drawing.Size(40, 20)
+        Me.txt_id.TabIndex = 17
         '
         'Form1
         '
@@ -594,12 +608,12 @@ Partial Class Form1
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage4.ResumeLayout(False)
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -641,15 +655,17 @@ Partial Class Form1
     Friend WithEvents Label6 As Label
     Friend WithEvents combo_RiskRating As ComboBox
     Friend WithEvents Label7 As Label
-    Friend WithEvents RadioButton1 As RadioButton
-    Friend WithEvents RadioButton3 As RadioButton
-    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents RadioToday As RadioButton
+    Friend WithEvents RadioYear As RadioButton
+    Friend WithEvents RadioWeek As RadioButton
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents RadioButton4 As RadioButton
+    Friend WithEvents RadioAll As RadioButton
     Friend WithEvents Label8 As Label
-    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents txt_inputticket As TextBox
     Friend WithEvents btn_PrintTicket As Button
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Label9 As Label
     Friend WithEvents btn_Save2 As Button
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents txt_id As TextBox
 End Class
