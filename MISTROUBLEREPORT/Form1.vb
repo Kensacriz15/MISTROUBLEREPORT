@@ -2,23 +2,82 @@
 Imports System.Data
 
 Public Class Form1
-    Dim connectionString As String = "server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;"
+    Dim connectionString As String
+
     Private activeFilter As String = "all"
 
+    ' Form Load Event
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TabControl1.Anchor = AnchorStyles.Top Or AnchorStyles.Left
         MaximizeBox = False
         combo_Department.SelectedIndex = 0
         combo_RiskRating.SelectedIndex = 0
-        LoadData() ' Load data initially
+        txt_password.UseSystemPasswordChar = True
+        LoadSettings()
+        InitializeConnectionString()
+        CheckDatabaseConnection()
+    End Sub
+
+    Private Sub LoadSettings()
+        txt_server.Text = My.Settings.Server
+        txt_port.Text = My.Settings.Port
+        txt_database.Text = My.Settings.Database
+        txt_username.Text = My.Settings.Username
+        txt_password.Text = My.Settings.Password
+    End Sub
+    ' Initialize the connection string with proper validation and debugging output
+    Private Sub InitializeConnectionString()
+        Try
+            Dim server As String = My.Settings.Server
+            Dim port As String = My.Settings.Port
+            Dim database As String = My.Settings.Database
+            Dim username As String = My.Settings.Username
+            Dim password As String = My.Settings.Password
+
+            ' Debugging output to verify the values
+            Console.WriteLine($"Server: {server}")
+            Console.WriteLine($"Port: {port}")
+            Console.WriteLine($"Database: {database}")
+            Console.WriteLine($"Username: {username}")
+            Console.WriteLine($"Password: {password}")
+
+            ' Validate the settings are not empty
+            If String.IsNullOrEmpty(server) OrElse
+               String.IsNullOrEmpty(port) OrElse
+               String.IsNullOrEmpty(database) OrElse
+               String.IsNullOrEmpty(username) OrElse
+               String.IsNullOrEmpty(password) Then
+                Throw New ArgumentException("One or more connection string values are empty.")
+            End If
+
+            connectionString = $"server={server};port={port};database={database};user={username};password={password};"
+        Catch ex As Exception
+            MessageBox.Show($"Error initializing connection string: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TabControl1.SelectedIndex = 3 ' Navigate to settings tab
+        End Try
+    End Sub
+
+    ' Check Database Connection
+    Private Sub CheckDatabaseConnection()
+        Using connection As New MySqlConnection(connectionString)
+            Try
+                connection.Open()
+                ' Connection successful, load the data
+                LoadData()
+            Catch ex As Exception
+                ' Connection failed, navigate to the settings tab
+                MessageBox.Show($"Database connection failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TabControl1.SelectedIndex = 3
+            End Try
+        End Using
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Timer1.Stop() ' Stop the timer
         If activeFilter = "all" Then
-            Dim query As String = "SELECT * FROM tb_MIS"
+            Dim query As String = "SELECT * FROM tb_mistroublereport"
 
-            Using connection As New MySqlConnection("server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;")
+            Using connection As New MySqlConnection(connectionString)
                 connection.Open()
 
                 Using command As New MySqlCommand(query, connection)
@@ -78,7 +137,7 @@ Public Class Form1
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
 
-            Dim query As String = "SELECT MAX(CAST(SUBSTRING_INDEX(ticket_number, '" & DateTime.Now.ToString("ddMMyyyy") & combo_Department.SelectedItem.ToString().Substring(0, 2) & "', -1) AS UNSIGNED)) AS max_ticket_number FROM tb_MIS WHERE ticket_number LIKE '" & DateTime.Now.ToString("ddMMyyyy") & combo_Department.SelectedItem.ToString().Substring(0, 2) & "%'"
+            Dim query As String = "SELECT MAX(CAST(SUBSTRING_INDEX(ticket_number, '" & DateTime.Now.ToString("ddMMyyyy") & combo_Department.SelectedItem.ToString().Substring(0, 2) & "', -1) AS UNSIGNED)) AS max_ticket_number FROM tb_mistroublereport WHERE ticket_number LIKE '" & DateTime.Now.ToString("ddMMyyyy") & combo_Department.SelectedItem.ToString().Substring(0, 2) & "%'"
 
             Using command As New MySqlCommand(query, connection)
                 Dim reader As MySqlDataReader = command.ExecuteReader()
@@ -127,10 +186,10 @@ Public Class Form1
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
 
-            Dim query As String = "INSERT INTO tb_MIS (start_date, name, ticket_number, description) VALUES (@start_date, @name, @ticket_number, @description)"
+            Dim query As String = "INSERT INTO tb_mistroublereport (start_date, name, ticket_number, description) VALUES (@start_date, @name, @ticket_number, @description)"
 
             Using command As New MySqlCommand(query, connection)
-                command.Parameters.AddWithValue("@start_date", startDate.ToString("yyyy-MM-dd hh:mm:ss tt"))
+                command.Parameters.AddWithValue("@start_date", startDate)
                 command.Parameters.AddWithValue("@name", name)
                 command.Parameters.AddWithValue("@ticket_number", ticketNumber)
                 command.Parameters.AddWithValue("@description", description)
@@ -139,7 +198,7 @@ Public Class Form1
             End Using
 
             ' Refresh the DataGridView
-            Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_MIS", connection)
+            Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_mistroublereport", connection)
             Dim table As New DataTable()
             adapter.Fill(table)
             DataGridView2.DataSource = table
@@ -164,7 +223,7 @@ Public Class Form1
     Private Sub btn_find1_Click(sender As Object, e As EventArgs) Handles btn_find1.Click
         Dim searchValue As String = txt_find2.Text.Trim()
 
-        Dim query As String = "SELECT * FROM tb_MIS WHERE ticket_number = @searchValue"
+        Dim query As String = "SELECT * FROM tb_mistroublereport WHERE ticket_number = @searchValue"
 
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
@@ -214,7 +273,7 @@ Public Class Form1
 #End Region
 
 #Region "Tab3"
-    'Add Information in tb_MIS
+    'Add Information in tb_mistroublereport
     'wHEN i select in gridbox it will automatic show ticket number
     'and Add information such as trouble time and completed time
     'i have level low impact, negligible, moderate and critical this would be based on trouble_time and completed time
@@ -301,14 +360,13 @@ Public Class Form1
 
 
     Private Sub btn_Save2_Click(sender As Object, e As EventArgs) Handles btn_Save2.Click
-        ' Establish database connection
-        Dim connectionString As String = "server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;"
+
 
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
 
             ' Check if the ticket number exists in the database
-            Dim queryCheckTicket As String = "SELECT COUNT(*) FROM tb_MIS WHERE ticket_number = @ticket_number"
+            Dim queryCheckTicket As String = "SELECT COUNT(*) FROM tb_mistroublereport WHERE ticket_number = @ticket_number"
             Dim ticketExists As Boolean = False
 
             Using commandCheckTicket As New MySqlCommand(queryCheckTicket, connection)
@@ -325,7 +383,7 @@ Public Class Form1
             End If
 
             ' Check if the record with the same ID already exists
-            Dim queryCheck As String = "SELECT COUNT(*) FROM tb_MIS WHERE id = @id"
+            Dim queryCheck As String = "SELECT COUNT(*) FROM tb_mistroublereport WHERE id = @id"
             Dim recordExists As Boolean = False
 
             Using commandCheck As New MySqlCommand(queryCheck, connection)
@@ -338,9 +396,9 @@ Public Class Form1
             ' Construct the SQL insert or update query based on record existence
             Dim query As String = ""
             If recordExists Then
-                query = "UPDATE tb_MIS SET ticket_number = @ticket_number, trouble_time = @trouble_time, completed_date = @completed_date, level = @level, risk_rating = @risk_rating WHERE id = @id"
+                query = "UPDATE tb_mistroublereport SET ticket_number = @ticket_number, trouble_time = @trouble_time, completed_time = @completed_time, level = @level, risk_rating = @risk_rating WHERE id = @id"
             Else
-                query = "INSERT INTO tb_MIS (id, ticket_number, trouble_time, completed_date, level, risk_rating) VALUES (@id, @ticket_number, @trouble_time, @completed_date, @level, @risk_rating)"
+                query = "INSERT INTO tb_mistroublereport (id, ticket_number, trouble_time, completed_time, level, risk_rating) VALUES (@id, @ticket_number, @trouble_time, @completed_time, @level, @risk_rating)"
             End If
 
             ' Create and configure the MySqlCommand object
@@ -348,7 +406,7 @@ Public Class Form1
                 command.Parameters.AddWithValue("@id", txt_id.Text)
                 command.Parameters.AddWithValue("@ticket_number", txt_inputticket.Text)
                 command.Parameters.AddWithValue("@trouble_time", txt_TroubleTime.Text)
-                command.Parameters.AddWithValue("@completed_date", txt_CompletedTime.Text)
+                command.Parameters.AddWithValue("@completed_time", txt_CompletedTime.Text)
                 Dim level As String = CalculateLevelFromTimes(txt_TroubleTime.Text, txt_CompletedTime.Text)
                 command.Parameters.AddWithValue("@level", level)
                 command.Parameters.AddWithValue("@risk_rating", combo_RiskRating.SelectedItem.ToString())
@@ -371,7 +429,7 @@ Public Class Form1
             End Using
 
             ' Refresh the DataGridView
-            Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_MIS", connection)
+            Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_mistroublereport", connection)
             Dim table As New DataTable()
             adapter.Fill(table)
             DataGridView2.DataSource = table
@@ -441,11 +499,10 @@ Public Class Form1
 
     ' Method to Filter DataGridView Based on Filter Type
     Private Sub FilterDataGridView(filterType As String)
-        Dim connectionString As String = "server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;"
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
 
-            Dim query As String = "SELECT * FROM tb_MIS"
+            Dim query As String = "SELECT * FROM tb_mistroublereport"
 
             Select Case filterType
                 Case "today"
@@ -472,11 +529,49 @@ Public Class Form1
         End Using
     End Sub
 
+    Private Sub btn_PrintTicket_Click(sender As Object, e As EventArgs) Handles btn_PrintTicket.Click
+
+    End Sub
+
 
 
 #End Region
 
 #Region "Tab4"
+    'CONFIG SETTINGS
+
+    Private Sub txt_server_TextChanged(sender As Object, e As EventArgs) Handles txt_server.TextChanged
+        My.Settings.Server = txt_server.Text
+    End Sub
+
+    Private Sub txt_port_TextChanged(sender As Object, e As EventArgs) Handles txt_port.TextChanged
+        My.Settings.Port = txt_port.Text
+    End Sub
+
+    Private Sub txt_database_TextChanged(sender As Object, e As EventArgs) Handles txt_database.TextChanged
+        My.Settings.Database = txt_database.Text
+    End Sub
+
+    Private Sub txt_username_TextChanged(sender As Object, e As EventArgs) Handles txt_username.TextChanged
+        My.Settings.Username = txt_username.Text
+    End Sub
+
+    Private Sub txt_password_TextChanged(sender As Object, e As EventArgs) Handles txt_password.TextChanged
+        My.Settings.Password = txt_password.Text
+    End Sub
+
+    Private Sub btn_savesettings_Click(sender As Object, e As EventArgs) Handles btn_savesettings.Click
+        ' Save the settings
+        My.Settings.Save()
+
+        ' Update the connection string
+        connectionString = $"server={My.Settings.Server};port={My.Settings.Port};database={My.Settings.Database};user={My.Settings.Username};password={My.Settings.Password};"
+
+        ' Perform any other necessary actions
+        ' ...
+    End Sub
+
+
 
 #End Region
 
