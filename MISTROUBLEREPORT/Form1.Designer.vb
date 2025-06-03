@@ -81,6 +81,7 @@ Partial Class Form1
         Me.btn_Print = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
+        Me.MySqlCommand1 = New MySql.Data.MySqlClient.MySqlCommand()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -131,10 +132,10 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Controls.Add(Me.TabPage4)
-        Me.TabControl1.Location = New System.Drawing.Point(118, -21)
+        Me.TabControl1.Location = New System.Drawing.Point(118, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(679, 473)
+        Me.TabControl1.Size = New System.Drawing.Size(679, 440)
         Me.TabControl1.TabIndex = 4
         '
         'TabPage1
@@ -150,7 +151,7 @@ Partial Class Form1
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(671, 447)
+        Me.TabPage1.Size = New System.Drawing.Size(671, 414)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -174,7 +175,7 @@ Partial Class Form1
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(97, 198)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(138, 16)
+        Me.Label3.Size = New System.Drawing.Size(137, 16)
         Me.Label3.TabIndex = 6
         Me.Label3.Text = "Describe the Problem"
         '
@@ -195,7 +196,7 @@ Partial Class Form1
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(242, 133)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(96, 16)
+        Me.Label2.Size = New System.Drawing.Size(95, 16)
         Me.Label2.TabIndex = 4
         Me.Label2.Text = "Ticket Number"
         '
@@ -214,7 +215,7 @@ Partial Class Form1
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(97, 65)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(45, 16)
+        Me.Label1.Size = New System.Drawing.Size(44, 16)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Name"
         '
@@ -244,7 +245,7 @@ Partial Class Form1
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(671, 427)
+        Me.TabPage2.Size = New System.Drawing.Size(671, 444)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -279,7 +280,7 @@ Partial Class Form1
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(671, 427)
+        Me.TabPage3.Size = New System.Drawing.Size(671, 414)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
         Me.TabPage3.UseVisualStyleBackColor = True
@@ -330,7 +331,7 @@ Partial Class Form1
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label9.Location = New System.Drawing.Point(107, 8)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(154, 16)
+        Me.Label9.Size = New System.Drawing.Size(153, 16)
         Me.Label9.TabIndex = 13
         Me.Label9.Text = "Add Information in Ticket"
         '
@@ -348,7 +349,7 @@ Partial Class Form1
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.Location = New System.Drawing.Point(17, 39)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(96, 16)
+        Me.Label8.Size = New System.Drawing.Size(95, 16)
         Me.Label8.TabIndex = 14
         Me.Label8.Text = "Ticket Number"
         '
@@ -378,7 +379,7 @@ Partial Class Form1
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(27, 66)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(86, 16)
+        Me.Label4.Size = New System.Drawing.Size(85, 16)
         Me.Label4.TabIndex = 3
         Me.Label4.Text = "TroubleTime"
         '
@@ -388,7 +389,7 @@ Partial Class Form1
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.Location = New System.Drawing.Point(68, 121)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(41, 16)
+        Me.Label6.Size = New System.Drawing.Size(40, 16)
         Me.Label6.TabIndex = 5
         Me.Label6.Text = "Level"
         '
@@ -415,7 +416,7 @@ Partial Class Form1
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.Location = New System.Drawing.Point(8, 94)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(105, 16)
+        Me.Label5.Size = New System.Drawing.Size(104, 16)
         Me.Label5.TabIndex = 4
         Me.Label5.Text = "CompletedTime"
         '
@@ -447,7 +448,7 @@ Partial Class Form1
         Me.RadioAll.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioAll.Location = New System.Drawing.Point(3, 106)
         Me.RadioAll.Name = "RadioAll"
-        Me.RadioAll.Size = New System.Drawing.Size(41, 20)
+        Me.RadioAll.Size = New System.Drawing.Size(40, 20)
         Me.RadioAll.TabIndex = 12
         Me.RadioAll.TabStop = True
         Me.RadioAll.Text = "All"
@@ -459,7 +460,7 @@ Partial Class Form1
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label7.Location = New System.Drawing.Point(4, 1)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(71, 16)
+        Me.Label7.Size = New System.Drawing.Size(70, 16)
         Me.Label7.TabIndex = 9
         Me.Label7.Text = "Show Only"
         '
@@ -469,7 +470,7 @@ Partial Class Form1
         Me.RadioYear.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioYear.Location = New System.Drawing.Point(3, 80)
         Me.RadioYear.Name = "RadioYear"
-        Me.RadioYear.Size = New System.Drawing.Size(55, 20)
+        Me.RadioYear.Size = New System.Drawing.Size(54, 20)
         Me.RadioYear.TabIndex = 11
         Me.RadioYear.TabStop = True
         Me.RadioYear.Text = "Year"
@@ -481,7 +482,7 @@ Partial Class Form1
         Me.RadioToday.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioToday.Location = New System.Drawing.Point(3, 27)
         Me.RadioToday.Name = "RadioToday"
-        Me.RadioToday.Size = New System.Drawing.Size(66, 20)
+        Me.RadioToday.Size = New System.Drawing.Size(65, 20)
         Me.RadioToday.TabIndex = 8
         Me.RadioToday.TabStop = True
         Me.RadioToday.Text = "Today"
@@ -493,7 +494,7 @@ Partial Class Form1
         Me.RadioWeek.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioWeek.Location = New System.Drawing.Point(3, 54)
         Me.RadioWeek.Name = "RadioWeek"
-        Me.RadioWeek.Size = New System.Drawing.Size(62, 20)
+        Me.RadioWeek.Size = New System.Drawing.Size(61, 20)
         Me.RadioWeek.TabIndex = 10
         Me.RadioWeek.TabStop = True
         Me.RadioWeek.Text = "Week"
@@ -517,7 +518,7 @@ Partial Class Form1
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(671, 424)
+        Me.TabPage4.Size = New System.Drawing.Size(671, 444)
         Me.TabPage4.TabIndex = 3
         Me.TabPage4.Text = "TabPage4"
         Me.TabPage4.UseVisualStyleBackColor = True
@@ -685,6 +686,13 @@ Partial Class Form1
         Me.NotifyIcon1.Text = "NotifyIcon1"
         Me.NotifyIcon1.Visible = True
         '
+        'MySqlCommand1
+        '
+        Me.MySqlCommand1.CacheAge = 0
+        Me.MySqlCommand1.Connection = Nothing
+        Me.MySqlCommand1.EnableCaching = False
+        Me.MySqlCommand1.Transaction = Nothing
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -774,4 +782,5 @@ Partial Class Form1
     Friend WithEvents CONFIG As Label
     Friend WithEvents txt_username As TextBox
     Friend WithEvents NotifyIcon1 As NotifyIcon
+    Friend WithEvents MySqlCommand1 As MySql.Data.MySqlClient.MySqlCommand
 End Class

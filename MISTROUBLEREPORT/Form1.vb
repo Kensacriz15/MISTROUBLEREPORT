@@ -14,8 +14,21 @@ Public Class Form1
         combo_RiskRating.SelectedIndex = 0
         txt_password.UseSystemPasswordChar = True
         LoadSettings()
-        InitializeConnectionString()
-        CheckDatabaseConnection()
+
+        ' Only try to connect if ALL fields are filled
+        If Not String.IsNullOrEmpty(txt_server.Text) AndAlso
+       Not String.IsNullOrEmpty(txt_port.Text) AndAlso
+       Not String.IsNullOrEmpty(txt_database.Text) AndAlso
+       Not String.IsNullOrEmpty(txt_username.Text) AndAlso
+       Not String.IsNullOrEmpty(txt_password.Text) Then
+
+            InitializeConnectionString()
+            CheckDatabaseConnection()
+        Else
+            ' Do not attempt to connect, do not show error, just stay on the current tab or switch to settings
+            ' Optionally, you can show a message or highlight the settings tab
+            'TabControl1.SelectedIndex = 1'
+        End If
     End Sub
 
     Private Sub LoadSettings()
@@ -530,7 +543,14 @@ Public Class Form1
     End Sub
 
     Private Sub btn_PrintTicket_Click(sender As Object, e As EventArgs) Handles btn_PrintTicket.Click
+        If String.IsNullOrEmpty(txt_id.Text) Then
+            MessageBox.Show("Please select a ticket to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
 
+        Dim printForm As New FormPrintTicket()
+        printForm.ShowTicket(Convert.ToInt32(txt_id.Text))
+        printForm.ShowDialog()
     End Sub
 
 
@@ -539,6 +559,11 @@ Public Class Form1
 
 #Region "Tab4"
     'CONFIG SETTINGS
+
+    Private Sub UpdateConnectionStringAndSave()
+        connectionString = $"server={My.Settings.Server};port={My.Settings.Port};database={My.Settings.Database};user={My.Settings.Username};password={My.Settings.Password};"
+        My.Settings.Save()
+    End Sub
 
     Private Sub txt_server_TextChanged(sender As Object, e As EventArgs) Handles txt_server.TextChanged
         My.Settings.Server = txt_server.Text
@@ -561,16 +586,21 @@ Public Class Form1
     End Sub
 
     Private Sub btn_savesettings_Click(sender As Object, e As EventArgs) Handles btn_savesettings.Click
-        ' Save the settings
-        My.Settings.Save()
-
-        ' Update the connection string
-        connectionString = $"server={My.Settings.Server};port={My.Settings.Port};database={My.Settings.Database};user={My.Settings.Username};password={My.Settings.Password};"
-
-        ' Perform any other necessary actions
-        ' ...
+        UpdateConnectionStringAndSave()
+        ' Try to open a connection to validate settings
+        Try
+            Using connection As New MySqlConnection(connectionString)
+                connection.Open()
+            End Using
+            MessageBox.Show("Settings saved and connection successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show("Database connection failed: " & ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
+    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
+
+    End Sub
 
 
 #End Region
