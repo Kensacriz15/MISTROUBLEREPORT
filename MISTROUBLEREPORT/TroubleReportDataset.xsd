@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="TroubleReportDataset" targetNamespace="http://tempuri.org/TroubleReportDataset.xsd" xmlns:mstns="http://tempuri.org/TroubleReportDataset.xsd" xmlns="http://tempuri.org/TroubleReportDataset.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="TroubleReportDataset" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="TroubleReportDataset" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="TroubleReportDataset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="tb_mistroublereport" msprop:Generator_RowEvHandlerName="tb_mistroublereportRowChangeEventHandler" msprop:Generator_RowDeletedName="tb_mistroublereportRowDeleted" msprop:Generator_RowDeletingName="tb_mistroublereportRowDeleting" msprop:Generator_RowEvArgName="tb_mistroublereportRowChangeEvent" msprop:Generator_TablePropName="tb_mistroublereport" msprop:Generator_RowChangedName="tb_mistroublereportRowChanged" msprop:Generator_UserTableName="tb_mistroublereport" msprop:Generator_RowChangingName="tb_mistroublereportRowChanging" msprop:Generator_RowClassName="tb_mistroublereportRow" msprop:Generator_TableClassName="tb_mistroublereportDataTable" msprop:Generator_TableVarName="tabletb_mistroublereport">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_UserColumnName="id" msprop:Generator_ColumnVarNameInTable="columnid" type="xs:string" minOccurs="0" />
+              <xs:element name="start_date" msprop:Generator_ColumnPropNameInTable="start_dateColumn" msprop:Generator_ColumnPropNameInRow="start_date" msprop:Generator_UserColumnName="start_date" msprop:Generator_ColumnVarNameInTable="columnstart_date" type="xs:string" minOccurs="0" />
+              <xs:element name="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_UserColumnName="name" msprop:Generator_ColumnVarNameInTable="columnname" type="xs:string" minOccurs="0" />
+              <xs:element name="ticket_number" msprop:Generator_ColumnPropNameInTable="ticket_numberColumn" msprop:Generator_ColumnPropNameInRow="ticket_number" msprop:Generator_UserColumnName="ticket_number" msprop:Generator_ColumnVarNameInTable="columnticket_number" type="xs:string" minOccurs="0" />
+              <xs:element name="description" msprop:Generator_ColumnPropNameInTable="descriptionColumn" msprop:Generator_ColumnPropNameInRow="description" msprop:Generator_UserColumnName="description" msprop:Generator_ColumnVarNameInTable="columndescription" type="xs:string" minOccurs="0" />
+              <xs:element name="trouble_time" msprop:Generator_ColumnPropNameInTable="trouble_timeColumn" msprop:Generator_ColumnPropNameInRow="trouble_time" msprop:Generator_UserColumnName="trouble_time" msprop:Generator_ColumnVarNameInTable="columntrouble_time" type="xs:string" minOccurs="0" />
+              <xs:element name="completed_time" msprop:Generator_ColumnPropNameInTable="completed_timeColumn" msprop:Generator_ColumnPropNameInRow="completed_time" msprop:Generator_UserColumnName="completed_time" msprop:Generator_ColumnVarNameInTable="columncompleted_time" type="xs:string" minOccurs="0" />
+              <xs:element name="level" msprop:Generator_ColumnPropNameInTable="levelColumn" msprop:Generator_ColumnPropNameInRow="level" msprop:Generator_UserColumnName="level" msprop:Generator_ColumnVarNameInTable="columnlevel" type="xs:string" minOccurs="0" />
+              <xs:element name="risk_rating" msprop:Generator_ColumnPropNameInTable="risk_ratingColumn" msprop:Generator_ColumnPropNameInRow="risk_rating" msprop:Generator_UserColumnName="risk_rating" msprop:Generator_ColumnVarNameInTable="columnrisk_rating" type="xs:string" minOccurs="0" />
+              <xs:element name="department" msprop:Generator_UserColumnName="department" msprop:Generator_ColumnPropNameInTable="departmentColumn" msprop:Generator_ColumnPropNameInRow="department" msprop:Generator_ColumnVarNameInTable="columndepartment" type="xs:string" minOccurs="0" />
+              <xs:element name="action_description" msprop:Generator_UserColumnName="action_description" msprop:Generator_ColumnPropNameInTable="action_descriptionColumn" msprop:Generator_ColumnPropNameInRow="action_description" msprop:Generator_ColumnVarNameInTable="columnaction_description" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

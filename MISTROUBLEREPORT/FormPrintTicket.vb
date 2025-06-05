@@ -1,30 +1,28 @@
-﻿Imports CrystalDecisions.CrystalReports.Engine
-Imports CrystalDecisions.Shared
+﻿Imports MySql.Data.MySqlClient
 
 Public Class FormPrintTicket
     Public Sub ShowTicket(ticketId As Integer)
-        Dim report As New TicketReport() ' This is your .rpt file's class
+        Dim connStr As String = ModuleConnection.connectionString
+        Dim ds As New TroubleReportDataset()
+        Dim rpt As New TicketReport()
 
-        ' Set up connection info from your app settings
-        Dim connInfo As New ConnectionInfo()
-        connInfo.ServerName = My.Settings.Server
-        connInfo.DatabaseName = My.Settings.Database
-        connInfo.UserID = My.Settings.Username
-        connInfo.Password = My.Settings.Password
-        connInfo.Type = ConnectionInfoType.SQL
-        connInfo.IntegratedSecurity = False
 
-        ' Apply connection info to all tables in the report
-        For Each table As Table In report.Database.Tables
-            Dim logonInfo As TableLogOnInfo = table.LogOnInfo
-            logonInfo.ConnectionInfo = connInfo
-            table.ApplyLogOnInfo(logonInfo)
-        Next
+        Using connection As New MySqlConnection(ModuleConnection.connectionString)
+            Dim query As String = "SELECT * FROM tb_mistroublereport WHERE id = @id"
+            Using da As New MySqlDataAdapter(query, connection)
+                da.SelectCommand.Parameters.AddWithValue("@id", ticketId)
+                da.Fill(ds.tb_mistroublereport)
+            End Using
+        End Using
 
-        ' Set the parameter for the ticket ID
-        report.SetParameterValue("id", ticketId)
+        rpt.SetDataSource(ds)
 
-        CrystalReportViewer1.ReportSource = report
-        CrystalReportViewer1.Refresh()
+        CrystalReportViewer1.ReportSource = Nothing
+        CrystalReportViewer1.ReportSource = rpt
+        CrystalReportViewer1.RefreshReport()
+
     End Sub
 End Class
+
+
+

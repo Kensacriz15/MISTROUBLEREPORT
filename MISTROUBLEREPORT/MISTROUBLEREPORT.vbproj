@@ -152,12 +152,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CrystalReport1.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CrystalReport1.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ModuleConnection.vb" />
     <Compile Include="TicketReport.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -193,12 +188,16 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings.vb" />
+    <Compile Include="TroubleReportDataset.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TroubleReportDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="TroubleReportDataset.vb">
+      <DependentUpon>TroubleReportDataset.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CrystalReport1.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>CrystalReport1.vb</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="TicketReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>TicketReport.vb</LastGenOutput>
@@ -228,6 +227,17 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="TroubleReportDataset.xsc">
+      <DependentUpon>TroubleReportDataset.xsd</DependentUpon>
+    </None>
+    <None Include="TroubleReportDataset.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>TroubleReportDataset.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="TroubleReportDataset.xss">
+      <DependentUpon>TroubleReportDataset.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

@@ -13,22 +13,24 @@ Public Class Form1
         combo_Department.SelectedIndex = 0
         combo_RiskRating.SelectedIndex = 0
         txt_password.UseSystemPasswordChar = True
+        ModuleConnection.connectionString = connectionString
         LoadSettings()
 
-        ' Only try to connect if ALL fields are filled
-        If Not String.IsNullOrEmpty(txt_server.Text) AndAlso
-       Not String.IsNullOrEmpty(txt_port.Text) AndAlso
-       Not String.IsNullOrEmpty(txt_database.Text) AndAlso
-       Not String.IsNullOrEmpty(txt_username.Text) AndAlso
-       Not String.IsNullOrEmpty(txt_password.Text) Then
+        ' Build the connection string from loaded settings
+        connectionString = $"server={txt_server.Text};port={txt_port.Text};database={txt_database.Text};user={txt_username.Text};password={txt_password.Text};"
 
-            InitializeConnectionString()
-            CheckDatabaseConnection()
-        Else
-            ' Do not attempt to connect, do not show error, just stay on the current tab or switch to settings
-            ' Optionally, you can show a message or highlight the settings tab
-            'TabControl1.SelectedIndex = 1'
-        End If
+        ' Try to connect to the database
+        Try
+            Using connection As New MySqlConnection(connectionString)
+                connection.Open()
+            End Using
+            ' Connection successful, you can load data here if needed
+            LoadData()
+        Catch ex As Exception
+            ' Connection failed, prompt user to fix settings
+            MessageBox.Show("Database connection failed: " & ex.Message & vbCrLf & "Please check your settings.", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TabControl1.SelectedIndex = 3 ' Switch to settings tab (Tab4)
+        End Try
     End Sub
 
     Private Sub LoadSettings()
@@ -129,6 +131,38 @@ Public Class Form1
         TabControl1.SelectedIndex = 3
     End Sub
 
+    Private Sub StyleDataGridView()
+        With DataGridView2
+            ' Alternating row colors
+            .AlternatingRowsDefaultCellStyle.BackColor = Color.LightGray
+            .RowsDefaultCellStyle.BackColor = Color.White
+
+            ' Grid and header styles
+            .GridColor = Color.DarkGray
+            .BorderStyle = BorderStyle.Fixed3D
+            .EnableHeadersVisualStyles = False
+
+            ' Header style
+            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 10, FontStyle.Bold)
+            .ColumnHeadersDefaultCellStyle.BackColor = Color.SteelBlue
+            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
+            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .ColumnHeadersHeight = 35
+
+            ' Row selection style
+            .DefaultCellStyle.SelectionBackColor = Color.LightSteelBlue
+            .DefaultCellStyle.SelectionForeColor = Color.Black
+
+            ' Font and layout
+            .DefaultCellStyle.Font = New Font("Segoe UI", 10)
+            .RowTemplate.Height = 28
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            .AllowUserToAddRows = False
+            .AllowUserToResizeRows = False
+            .ReadOnly = True
+        End With
+    End Sub
+
 #Region "Tab1"
 
     Dim ticketCounter As Integer = 0
@@ -190,7 +224,15 @@ Public Class Form1
         Dim ticketNumber As String = txt_ticketnumber.Text
         Dim description As String = txt_Description.Text
 
-        ' Validate the name field
+        ' Check if department is selected
+        If combo_Department.SelectedIndex = 0 OrElse combo_Department.SelectedItem Is Nothing Then
+            MessageBox.Show("Please select a department.", "Submit Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Dim department As String = combo_Department.SelectedItem.ToString()
+
+        ' Validate name field
         If String.IsNullOrWhiteSpace(name) Then
             MessageBox.Show("Please enter a name.", "Submit Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
@@ -199,18 +241,19 @@ Public Class Form1
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
 
-            Dim query As String = "INSERT INTO tb_mistroublereport (start_date, name, ticket_number, description) VALUES (@start_date, @name, @ticket_number, @description)"
+            Dim query As String = "INSERT INTO tb_mistroublereport (start_date, name, ticket_number, description, department) VALUES (@start_date, @name, @ticket_number, @description, @department)"
 
             Using command As New MySqlCommand(query, connection)
                 command.Parameters.AddWithValue("@start_date", startDate)
                 command.Parameters.AddWithValue("@name", name)
                 command.Parameters.AddWithValue("@ticket_number", ticketNumber)
                 command.Parameters.AddWithValue("@description", description)
+                command.Parameters.AddWithValue("@department", department)
 
                 command.ExecuteNonQuery()
             End Using
 
-            ' Refresh the DataGridView
+            ' Refresh DataGridView
             Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_mistroublereport", connection)
             Dim table As New DataTable()
             adapter.Fill(table)
@@ -219,14 +262,19 @@ Public Class Form1
             connection.Close()
         End Using
 
-        ' Clear the input fields after submitting
+        ' Copy ticket number to clipboard
+        Clipboard.SetText(ticketNumber)
+
+        ' Show confirmation
+        MessageBox.Show("Ticket submitted successfully!" & vbCrLf & "Ticket Number: " & ticketNumber & vbCrLf & "It has been copied to the clipboard.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+        ' Clear input fields
         txt_Name.Text = ""
         txt_ticketnumber.Text = ""
         txt_Description.Text = ""
-
-        ' Display a message or perform any additional actions after submitting
-        MessageBox.Show("Ticket submitted successfully!")
+        combo_Department.SelectedIndex = 0
     End Sub
+
 
 
 
@@ -248,22 +296,29 @@ Public Class Form1
                 Dim table As New DataTable()
                 adapter.Fill(table)
 
-                ' Display the ticket information if found
                 If table.Rows.Count > 0 Then
                     Dim row As DataRow = table.Rows(0)
                     Dim ticketNumber As String = row("ticket_number").ToString()
                     Dim startDate As DateTime = Convert.ToDateTime(row("start_date"))
                     Dim name As String = row("name").ToString()
                     Dim description As String = row("description").ToString()
+                    Dim completedTime As Object = row("completed_time")
 
-                    ' Display the ticket information in a message box or any other desired way
+                    ' Build ticket info
                     Dim ticketInfo As String = $"Ticket Number: {ticketNumber}{Environment.NewLine}" &
                                            $"Start Date: {startDate}{Environment.NewLine}" &
                                            $"Name: {name}{Environment.NewLine}" &
                                            $"Description: {description}"
+
+                    ' Add ticket status
+                    If Not IsDBNull(completedTime) AndAlso Not String.IsNullOrWhiteSpace(completedTime.ToString()) Then
+                        ticketInfo &= $"{Environment.NewLine}Status: Ticket Closed"
+                    Else
+                        ticketInfo &= $"{Environment.NewLine}Status: Ticket Open"
+                    End If
+
                     MessageBox.Show(ticketInfo, "Ticket Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Else
-                    ' Display a message if no ticket information is found
                     MessageBox.Show("Ticket not found.", "Ticket Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
             End Using
@@ -271,6 +326,8 @@ Public Class Form1
             connection.Close()
         End Using
     End Sub
+
+
 
     Private Sub txt_find2_TextChanged(sender As Object, e As EventArgs) Handles txt_find2.TextChanged
 
@@ -301,6 +358,10 @@ Public Class Form1
             txt_CompletedTime.Text = DataGridView2.SelectedRows(0).Cells("completed_time").Value.ToString()
             txt_Level.Text = DataGridView2.SelectedRows(0).Cells("level").Value.ToString()
             combo_RiskRating.Text = DataGridView2.SelectedRows(0).Cells("risk_rating").Value.ToString()
+            Action_Text_Box.Text = DataGridView2.SelectedRows(0).Cells("action_description").Value.ToString()
+        End If
+        If DataGridView2.Columns.Contains("id") Then
+            DataGridView2.Columns("id").Visible = False
         End If
     End Sub
 
@@ -371,10 +432,11 @@ Public Class Form1
 
     End Sub
 
+    Private Sub Action_Text_Box_TextChanged(sender As Object, e As EventArgs) Handles Action_Text_Box.TextChanged
+
+    End Sub
 
     Private Sub btn_Save2_Click(sender As Object, e As EventArgs) Handles btn_Save2.Click
-
-
         Using connection As New MySqlConnection(connectionString)
             connection.Open()
 
@@ -384,7 +446,6 @@ Public Class Form1
 
             Using commandCheckTicket As New MySqlCommand(queryCheckTicket, connection)
                 commandCheckTicket.Parameters.AddWithValue("@ticket_number", txt_inputticket.Text)
-
                 Dim countTicket As Integer = Convert.ToInt32(commandCheckTicket.ExecuteScalar())
                 ticketExists = (countTicket > 0)
             End Using
@@ -395,53 +456,54 @@ Public Class Form1
                 Return
             End If
 
+            ' Convert and validate times
+            Dim troubleTime As DateTime
+            Dim completedTime As DateTime
+
+            If Not DateTime.TryParse(txt_TroubleTime.Text, troubleTime) OrElse Not DateTime.TryParse(txt_CompletedTime.Text, completedTime) Then
+                MessageBox.Show("Please enter valid time values (e.g., 11:00 AM).")
+                Return
+            End If
+
             ' Check if the record with the same ID already exists
             Dim queryCheck As String = "SELECT COUNT(*) FROM tb_mistroublereport WHERE id = @id"
             Dim recordExists As Boolean = False
 
             Using commandCheck As New MySqlCommand(queryCheck, connection)
                 commandCheck.Parameters.AddWithValue("@id", txt_id.Text)
-
                 Dim count As Integer = Convert.ToInt32(commandCheck.ExecuteScalar())
                 recordExists = (count > 0)
             End Using
 
-            ' Construct the SQL insert or update query based on record existence
-            Dim query As String = ""
-            If recordExists Then
-                query = "UPDATE tb_mistroublereport SET ticket_number = @ticket_number, trouble_time = @trouble_time, completed_time = @completed_time, level = @level, risk_rating = @risk_rating WHERE id = @id"
-            Else
-                query = "INSERT INTO tb_mistroublereport (id, ticket_number, trouble_time, completed_time, level, risk_rating) VALUES (@id, @ticket_number, @trouble_time, @completed_time, @level, @risk_rating)"
-            End If
+            ' Construct SQL query
+            Dim query As String = If(recordExists,
+           "UPDATE tb_mistroublereport SET ticket_number = @ticket_number, trouble_time = @trouble_time, completed_time = @completed_time, level = @level, risk_rating = @risk_rating, action_description = @action_description WHERE id = @id",
+           "INSERT INTO tb_mistroublereport (id, ticket_number, trouble_time, completed_time, level, risk_rating, action_description) VALUES (@id, @ticket_number, @trouble_time, @completed_time, @level, @risk_rating, @action_description)")
 
-            ' Create and configure the MySqlCommand object
+            ' Create and configure MySqlCommand
             Using command As New MySqlCommand(query, connection)
                 command.Parameters.AddWithValue("@id", txt_id.Text)
                 command.Parameters.AddWithValue("@ticket_number", txt_inputticket.Text)
-                command.Parameters.AddWithValue("@trouble_time", txt_TroubleTime.Text)
-                command.Parameters.AddWithValue("@completed_time", txt_CompletedTime.Text)
+                command.Parameters.AddWithValue("@trouble_time", DateTime.Today.Add(troubleTime.TimeOfDay))
+                command.Parameters.AddWithValue("@completed_time", DateTime.Today.Add(completedTime.TimeOfDay))
                 Dim level As String = CalculateLevelFromTimes(txt_TroubleTime.Text, txt_CompletedTime.Text)
                 command.Parameters.AddWithValue("@level", level)
                 command.Parameters.AddWithValue("@risk_rating", combo_RiskRating.SelectedItem.ToString())
-
-                ' Execute the insert or update query
+                command.Parameters.AddWithValue("@action_description", Action_Text_Box.Text)
                 command.ExecuteNonQuery()
 
-                If recordExists Then
-                    MessageBox.Show("Data updated successfully.")
-                Else
-                    MessageBox.Show("Data saved successfully.")
-                End If
+                MessageBox.Show(If(recordExists, "Data updated successfully.", "Data saved successfully."))
 
-                ' Clear the text boxes after saving
+                ' Clear fields
                 txt_inputticket.Text = ""
                 txt_TroubleTime.Text = ""
                 txt_CompletedTime.Text = ""
                 txt_Level.Text = ""
+                Action_Text_Box.Text = ""
                 combo_RiskRating.SelectedIndex = 0
             End Using
 
-            ' Refresh the DataGridView
+            ' Refresh DataGridView
             Dim adapter As New MySqlDataAdapter("SELECT * FROM tb_mistroublereport", connection)
             Dim table As New DataTable()
             adapter.Fill(table)
@@ -450,6 +512,7 @@ Public Class Form1
             connection.Close()
         End Using
     End Sub
+
 
 
     Private Function CalculateLevelFromTimes(troubleTime As String, completedTime As String) As String
@@ -548,6 +611,8 @@ Public Class Form1
             Return
         End If
 
+        ModuleConnection.connectionString = $"server={My.Settings.Server};port={My.Settings.Port};database={My.Settings.Database};user={My.Settings.Username};password=;"
+
         Dim printForm As New FormPrintTicket()
         printForm.ShowTicket(Convert.ToInt32(txt_id.Text))
         printForm.ShowDialog()
@@ -601,6 +666,8 @@ Public Class Form1
     Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
 
     End Sub
+
+
 
 
 #End Region

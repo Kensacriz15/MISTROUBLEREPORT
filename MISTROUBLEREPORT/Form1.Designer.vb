@@ -41,8 +41,11 @@ Partial Class Form1
         Me.txt_find2 = New System.Windows.Forms.TextBox()
         Me.btn_find1 = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.btn_PrintTicket = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label16 = New System.Windows.Forms.Label()
         Me.txt_id = New System.Windows.Forms.TextBox()
+        Me.Action_Text_Box = New System.Windows.Forms.RichTextBox()
         Me.btn_Save2 = New System.Windows.Forms.Button()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.txt_inputticket = New System.Windows.Forms.TextBox()
@@ -54,7 +57,6 @@ Partial Class Form1
         Me.txt_CompletedTime = New System.Windows.Forms.TextBox()
         Me.txt_Level = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.btn_PrintTicket = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.RadioAll = New System.Windows.Forms.RadioButton()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -82,6 +84,7 @@ Partial Class Form1
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.MySqlCommand1 = New MySql.Data.MySqlClient.MySqlCommand()
+        Me.Label17 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -112,7 +115,7 @@ Partial Class Form1
         Me.btn_Find.Name = "btn_Find"
         Me.btn_Find.Size = New System.Drawing.Size(100, 40)
         Me.btn_Find.TabIndex = 2
-        Me.btn_Find.Text = "Find"
+        Me.btn_Find.Text = "Find Ticket"
         Me.btn_Find.UseVisualStyleBackColor = True
         '
         'btn_Settings
@@ -140,6 +143,7 @@ Partial Class Form1
         '
         'TabPage1
         '
+        Me.TabPage1.Controls.Add(Me.Label17)
         Me.TabPage1.Controls.Add(Me.btn_Submit)
         Me.TabPage1.Controls.Add(Me.Label3)
         Me.TabPage1.Controls.Add(Me.txt_Description)
@@ -213,11 +217,11 @@ Partial Class Form1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(97, 65)
+        Me.Label1.Location = New System.Drawing.Point(47, 94)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(44, 16)
+        Me.Label1.Size = New System.Drawing.Size(47, 16)
         Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Name"
+        Me.Label1.Text = "Name "
         '
         'txt_Name
         '
@@ -245,7 +249,7 @@ Partial Class Form1
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(671, 444)
+        Me.TabPage2.Size = New System.Drawing.Size(671, 414)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -273,22 +277,33 @@ Partial Class Form1
         '
         'TabPage3
         '
-        Me.TabPage3.Controls.Add(Me.Panel2)
         Me.TabPage3.Controls.Add(Me.btn_PrintTicket)
+        Me.TabPage3.Controls.Add(Me.Panel2)
         Me.TabPage3.Controls.Add(Me.Panel1)
         Me.TabPage3.Controls.Add(Me.DataGridView2)
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(671, 414)
+        Me.TabPage3.Size = New System.Drawing.Size(671, 447)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
+        'btn_PrintTicket
+        '
+        Me.btn_PrintTicket.Location = New System.Drawing.Point(549, 193)
+        Me.btn_PrintTicket.Name = "btn_PrintTicket"
+        Me.btn_PrintTicket.Size = New System.Drawing.Size(75, 23)
+        Me.btn_PrintTicket.TabIndex = 15
+        Me.btn_PrintTicket.Text = "Print"
+        Me.btn_PrintTicket.UseVisualStyleBackColor = True
+        '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.Khaki
+        Me.Panel2.Controls.Add(Me.Label16)
         Me.Panel2.Controls.Add(Me.txt_id)
+        Me.Panel2.Controls.Add(Me.Action_Text_Box)
         Me.Panel2.Controls.Add(Me.btn_Save2)
         Me.Panel2.Controls.Add(Me.Label9)
         Me.Panel2.Controls.Add(Me.txt_inputticket)
@@ -302,8 +317,18 @@ Partial Class Form1
         Me.Panel2.Controls.Add(Me.Label5)
         Me.Panel2.Location = New System.Drawing.Point(121, 12)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(364, 215)
+        Me.Panel2.Size = New System.Drawing.Size(511, 215)
         Me.Panel2.TabIndex = 13
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label16.Location = New System.Drawing.Point(402, 14)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(44, 16)
+        Me.Label16.TabIndex = 18
+        Me.Label16.Text = "Action"
         '
         'txt_id
         '
@@ -313,6 +338,14 @@ Partial Class Form1
         Me.txt_id.Size = New System.Drawing.Size(40, 20)
         Me.txt_id.TabIndex = 17
         Me.txt_id.Visible = False
+        '
+        'Action_Text_Box
+        '
+        Me.Action_Text_Box.Location = New System.Drawing.Point(333, 33)
+        Me.Action_Text_Box.Name = "Action_Text_Box"
+        Me.Action_Text_Box.Size = New System.Drawing.Size(170, 110)
+        Me.Action_Text_Box.TabIndex = 16
+        Me.Action_Text_Box.Text = ""
         '
         'btn_Save2
         '
@@ -420,15 +453,6 @@ Partial Class Form1
         Me.Label5.TabIndex = 4
         Me.Label5.Text = "CompletedTime"
         '
-        'btn_PrintTicket
-        '
-        Me.btn_PrintTicket.Location = New System.Drawing.Point(549, 193)
-        Me.btn_PrintTicket.Name = "btn_PrintTicket"
-        Me.btn_PrintTicket.Size = New System.Drawing.Size(75, 23)
-        Me.btn_PrintTicket.TabIndex = 15
-        Me.btn_PrintTicket.Text = "Print"
-        Me.btn_PrintTicket.UseVisualStyleBackColor = True
-        '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.SkyBlue
@@ -509,7 +533,7 @@ Partial Class Form1
         Me.DataGridView2.Location = New System.Drawing.Point(6, 246)
         Me.DataGridView2.Name = "DataGridView2"
         Me.DataGridView2.ReadOnly = True
-        Me.DataGridView2.Size = New System.Drawing.Size(659, 170)
+        Me.DataGridView2.Size = New System.Drawing.Size(659, 158)
         Me.DataGridView2.TabIndex = 6
         '
         'TabPage4
@@ -518,7 +542,7 @@ Partial Class Form1
         Me.TabPage4.Location = New System.Drawing.Point(4, 22)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(671, 444)
+        Me.TabPage4.Size = New System.Drawing.Size(671, 447)
         Me.TabPage4.TabIndex = 3
         Me.TabPage4.Text = "TabPage4"
         Me.TabPage4.UseVisualStyleBackColor = True
@@ -693,6 +717,16 @@ Partial Class Form1
         Me.MySqlCommand1.EnableCaching = False
         Me.MySqlCommand1.Transaction = Nothing
         '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label17.Location = New System.Drawing.Point(286, 25)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(121, 24)
+        Me.Label17.TabIndex = 8
+        Me.Label17.Text = "Ticket Form"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -783,4 +817,7 @@ Partial Class Form1
     Friend WithEvents txt_username As TextBox
     Friend WithEvents NotifyIcon1 As NotifyIcon
     Friend WithEvents MySqlCommand1 As MySql.Data.MySqlClient.MySqlCommand
+    Friend WithEvents Action_Text_Box As RichTextBox
+    Friend WithEvents Label16 As Label
+    Friend WithEvents Label17 As Label
 End Class
