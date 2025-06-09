@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class Form1
+Partial Class MainForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -23,12 +23,13 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.btn_CreateTicket = New System.Windows.Forms.Button()
         Me.btn_Find = New System.Windows.Forms.Button()
         Me.btn_Settings = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.Label17 = New System.Windows.Forms.Label()
         Me.btn_Submit = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txt_Description = New System.Windows.Forms.RichTextBox()
@@ -43,6 +44,7 @@ Partial Class Form1
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.btn_PrintTicket = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.btn_Delete = New System.Windows.Forms.Button()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.txt_id = New System.Windows.Forms.TextBox()
         Me.Action_Text_Box = New System.Windows.Forms.RichTextBox()
@@ -66,8 +68,7 @@ Partial Class Form1
         Me.DataGridView2 = New System.Windows.Forms.DataGridView()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.btn_ChangePassword = New System.Windows.Forms.Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -84,7 +85,6 @@ Partial Class Form1
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.MySqlCommand1 = New MySql.Data.MySqlClient.MySqlCommand()
-        Me.Label17 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -135,10 +135,10 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Controls.Add(Me.TabPage4)
-        Me.TabControl1.Location = New System.Drawing.Point(118, 12)
+        Me.TabControl1.Location = New System.Drawing.Point(118, -19)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(679, 440)
+        Me.TabControl1.Size = New System.Drawing.Size(679, 471)
         Me.TabControl1.TabIndex = 4
         '
         'TabPage1
@@ -155,10 +155,20 @@ Partial Class Form1
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(671, 414)
+        Me.TabPage1.Size = New System.Drawing.Size(671, 445)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label17.Location = New System.Drawing.Point(286, 25)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(121, 24)
+        Me.Label17.TabIndex = 8
+        Me.Label17.Text = "Ticket Form"
         '
         'btn_Submit
         '
@@ -185,6 +195,7 @@ Partial Class Form1
         '
         'txt_Description
         '
+        Me.txt_Description.BackColor = System.Drawing.Color.LightGray
         Me.txt_Description.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_Description.ForeColor = System.Drawing.SystemColors.InfoText
         Me.txt_Description.HideSelection = False
@@ -206,6 +217,7 @@ Partial Class Form1
         '
         'txt_ticketnumber
         '
+        Me.txt_ticketnumber.BackColor = System.Drawing.Color.LightGray
         Me.txt_ticketnumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_ticketnumber.Location = New System.Drawing.Point(207, 152)
         Me.txt_ticketnumber.Name = "txt_ticketnumber"
@@ -225,6 +237,7 @@ Partial Class Form1
         '
         'txt_Name
         '
+        Me.txt_Name.BackColor = System.Drawing.Color.LightGray
         Me.txt_Name.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_Name.Location = New System.Drawing.Point(100, 84)
         Me.txt_Name.Name = "txt_Name"
@@ -233,6 +246,7 @@ Partial Class Form1
         '
         'combo_Department
         '
+        Me.combo_Department.BackColor = System.Drawing.Color.LightGray
         Me.combo_Department.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.combo_Department.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.combo_Department.FormattingEnabled = True
@@ -249,7 +263,7 @@ Partial Class Form1
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(671, 414)
+        Me.TabPage2.Size = New System.Drawing.Size(671, 447)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -301,6 +315,7 @@ Partial Class Form1
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.Khaki
+        Me.Panel2.Controls.Add(Me.btn_Delete)
         Me.Panel2.Controls.Add(Me.Label16)
         Me.Panel2.Controls.Add(Me.txt_id)
         Me.Panel2.Controls.Add(Me.Action_Text_Box)
@@ -319,6 +334,17 @@ Partial Class Form1
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(511, 215)
         Me.Panel2.TabIndex = 13
+        '
+        'btn_Delete
+        '
+        Me.btn_Delete.BackColor = System.Drawing.Color.Red
+        Me.btn_Delete.ForeColor = System.Drawing.Color.White
+        Me.btn_Delete.Location = New System.Drawing.Point(11, 181)
+        Me.btn_Delete.Name = "btn_Delete"
+        Me.btn_Delete.Size = New System.Drawing.Size(75, 23)
+        Me.btn_Delete.TabIndex = 19
+        Me.btn_Delete.Text = "Delete"
+        Me.btn_Delete.UseVisualStyleBackColor = False
         '
         'Label16
         '
@@ -549,8 +575,7 @@ Partial Class Form1
         '
         'Panel3
         '
-        Me.Panel3.Controls.Add(Me.Label15)
-        Me.Panel3.Controls.Add(Me.TextBox1)
+        Me.Panel3.Controls.Add(Me.btn_ChangePassword)
         Me.Panel3.Controls.Add(Me.Label14)
         Me.Panel3.Controls.Add(Me.Label13)
         Me.Panel3.Controls.Add(Me.Label12)
@@ -568,22 +593,14 @@ Partial Class Form1
         Me.Panel3.Size = New System.Drawing.Size(659, 411)
         Me.Panel3.TabIndex = 6
         '
-        'Label15
+        'btn_ChangePassword
         '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(310, 47)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(45, 13)
-        Me.Label15.TabIndex = 13
-        Me.Label15.Text = "FilePath"
-        '
-        'TextBox1
-        '
-        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(313, 63)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(335, 26)
-        Me.TextBox1.TabIndex = 12
+        Me.btn_ChangePassword.Location = New System.Drawing.Point(477, 143)
+        Me.btn_ChangePassword.Name = "btn_ChangePassword"
+        Me.btn_ChangePassword.Size = New System.Drawing.Size(117, 23)
+        Me.btn_ChangePassword.TabIndex = 14
+        Me.btn_ChangePassword.Text = "Access Password"
+        Me.btn_ChangePassword.UseVisualStyleBackColor = True
         '
         'Label14
         '
@@ -717,17 +734,7 @@ Partial Class Form1
         Me.MySqlCommand1.EnableCaching = False
         Me.MySqlCommand1.Transaction = Nothing
         '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label17.Location = New System.Drawing.Point(286, 25)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(121, 24)
-        Me.Label17.TabIndex = 8
-        Me.Label17.Text = "Ticket Form"
-        '
-        'Form1
+        'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -739,7 +746,7 @@ Partial Class Form1
         Me.Controls.Add(Me.btn_Find)
         Me.Controls.Add(Me.btn_CreateTicket)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "Form1"
+        Me.Name = "MainForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "MIS TROUBLE REPORT"
         Me.TabControl1.ResumeLayout(False)
@@ -804,8 +811,6 @@ Partial Class Form1
     Friend WithEvents txt_database As TextBox
     Friend WithEvents txt_port As TextBox
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents Label15 As Label
-    Friend WithEvents TextBox1 As TextBox
     Friend WithEvents Label14 As Label
     Friend WithEvents Label13 As Label
     Friend WithEvents Label12 As Label
@@ -820,4 +825,6 @@ Partial Class Form1
     Friend WithEvents Action_Text_Box As RichTextBox
     Friend WithEvents Label16 As Label
     Friend WithEvents Label17 As Label
+    Friend WithEvents btn_ChangePassword As Button
+    Friend WithEvents btn_Delete As Button
 End Class

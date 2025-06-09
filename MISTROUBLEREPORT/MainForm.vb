@@ -1,7 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports System.Data
 
-Public Class Form1
+Public Class MainForm
     Dim connectionString As String
 
     Private activeFilter As String = "all"
@@ -13,25 +13,74 @@ Public Class Form1
         combo_Department.SelectedIndex = 0
         combo_RiskRating.SelectedIndex = 0
         txt_password.UseSystemPasswordChar = True
-        ModuleConnection.connectionString = connectionString
+
+        ' Load saved settings to textboxes
         LoadSettings()
 
-        ' Build the connection string from loaded settings
+        ' Build connection string from settings
         connectionString = $"server={txt_server.Text};port={txt_port.Text};database={txt_database.Text};user={txt_username.Text};password={txt_password.Text};"
+        ModuleConnection.connectionString = connectionString
 
-        ' Try to connect to the database
+        ' Try to connect and check table
         Try
             Using connection As New MySqlConnection(connectionString)
                 connection.Open()
+
+                ' Check if the required table exists
+                Dim checkTableQuery As String = "
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = @db AND table_name = 'tb_mistroublereport';
+            "
+
+                Dim tableExists As Boolean = False
+                Using cmd As New MySqlCommand(checkTableQuery, connection)
+                    cmd.Parameters.AddWithValue("@db", My.Settings.Database)
+                    tableExists = Convert.ToInt32(cmd.ExecuteScalar()) > 0
+                End Using
+
+                ' Ask to create the table if not found
+                If Not tableExists Then
+                    Dim response = MessageBox.Show("The table 'tb_mistroublereport' does not exist. Do you want to create it now?", "Missing Table", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    If response = DialogResult.Yes Then
+                        Dim createTableQuery As String = "
+                        CREATE TABLE tb_mistroublereport (
+                          id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                          start_date DATETIME NOT NULL,
+                          name VARCHAR(40) NOT NULL,
+                          department VARCHAR(30) DEFAULT NULL,
+                          ticket_number VARCHAR(50) NOT NULL,
+                          description TEXT,
+                          trouble_time DATETIME DEFAULT NULL,
+                          completed_time DATETIME DEFAULT NULL,
+                          level VARCHAR(20) DEFAULT NULL,
+                          risk_rating VARCHAR(50) DEFAULT NULL,
+                          action_description TEXT
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                    "
+
+                        Using createCmd As New MySqlCommand(createTableQuery, connection)
+                            createCmd.ExecuteNonQuery()
+                        End Using
+
+                        MessageBox.Show("Table created successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Else
+                        MessageBox.Show("Startup aborted. Table is required.", "Startup Halted", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        TabControl1.SelectedIndex = 3 ' Go to Settings tab
+                        Return
+                    End If
+                End If
+
+                ' Load any data needed into controls
+                LoadData()
+
             End Using
-            ' Connection successful, you can load data here if needed
-            LoadData()
         Catch ex As Exception
-            ' Connection failed, prompt user to fix settings
             MessageBox.Show("Database connection failed: " & ex.Message & vbCrLf & "Please check your settings.", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TabControl1.SelectedIndex = 3 ' Switch to settings tab (Tab4)
+            TabControl1.SelectedIndex = 3 ' Go to Settings tab
         End Try
     End Sub
+
 
     Private Sub LoadSettings()
         txt_server.Text = My.Settings.Server
@@ -39,6 +88,8 @@ Public Class Form1
         txt_database.Text = My.Settings.Database
         txt_username.Text = My.Settings.Username
         txt_password.Text = My.Settings.Password
+
+        connectionString = $"server={My.Settings.Server};port={My.Settings.Port};database={My.Settings.Database};user={My.Settings.Username};password={My.Settings.Password};"
     End Sub
     ' Initialize the connection string with proper validation and debugging output
     Private Sub InitializeConnectionString()
@@ -116,16 +167,20 @@ Public Class Form1
         TabControl1.SelectedIndex = 1
     End Sub
 
-    Dim correctPassword As String = "admin"
     Private Sub btn_Print_Click(sender As Object, e As EventArgs) Handles btn_Print.Click
-        Dim inputPassword As String = InputBox("Enter the password:", "Password Required")
+        Dim passwordEntryForm As New PasswordEntryForm()
+        If passwordEntryForm.ShowDialog() = DialogResult.OK Then
+            Dim inputPassword As String = passwordEntryForm.EnteredPassword
+            Dim correctPassword As String = My.Settings.AdminPassword
 
-        If inputPassword = correctPassword Then
-            TabControl1.SelectedIndex = 2
-        Else
-            MessageBox.Show("Incorrect password. Access denied.", "Password Incorrect", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            If inputPassword = correctPassword Then
+                TabControl1.SelectedIndex = 2
+            Else
+                MessageBox.Show("Incorrect password. Access denied.", "Password Incorrect", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         End If
     End Sub
+
 
     Private Sub btn_Settings_Click(sender As Object, e As EventArgs) Handles btn_Settings.Click
         TabControl1.SelectedIndex = 3
@@ -351,6 +406,9 @@ Public Class Form1
     'lastly risk taking combo box but leave at it should be
 
     Private Sub DataGridView2_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView2.SelectionChanged
+
+        btn_Delete.Enabled = DataGridView2.SelectedRows.Count > 0
+
         If DataGridView2.SelectedRows.Count > 0 Then
             txt_id.Text = DataGridView2.SelectedRows(0).Cells("id").Value.ToString()
             txt_inputticket.Text = DataGridView2.SelectedRows(0).Cells("ticket_number").Value.ToString()
@@ -618,6 +676,55 @@ Public Class Form1
         printForm.ShowDialog()
     End Sub
 
+    Private Sub btn_Delete_Click(sender As Object, e As EventArgs) Handles btn_Delete.Click
+        If DataGridView2.SelectedRows.Count = 0 Then
+            MessageBox.Show("Please select a row to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' Ask for password
+        Dim passwordEntryForm As New PasswordEntryForm()
+        If passwordEntryForm.ShowDialog() <> DialogResult.OK Then Return
+
+        Dim inputPassword As String = passwordEntryForm.EnteredPassword
+        Dim correctPassword As String = My.Settings.AdminPassword
+
+        If inputPassword <> correctPassword Then
+            MessageBox.Show("Incorrect password. Deletion denied.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        ' Confirm deletion
+        Dim confirmResult As DialogResult = MessageBox.Show("Are you sure you want to delete the selected entry?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+        If confirmResult <> DialogResult.Yes Then Return
+
+        ' Perform deletion
+        Dim selectedId As Integer = Convert.ToInt32(DataGridView2.SelectedRows(0).Cells("id").Value)
+
+        Using connection As New MySqlConnection(connectionString)
+            connection.Open()
+            Dim deleteQuery As String = "DELETE FROM tb_mistroublereport WHERE id = @id"
+
+            Using command As New MySqlCommand(deleteQuery, connection)
+                command.Parameters.AddWithValue("@id", selectedId)
+                command.ExecuteNonQuery()
+            End Using
+
+            MessageBox.Show("Record deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
+
+        ' Refresh data
+        LoadData()
+
+        ' Clear fields
+        txt_id.Text = ""
+        txt_inputticket.Text = ""
+        txt_TroubleTime.Text = ""
+        txt_CompletedTime.Text = ""
+        txt_Level.Text = ""
+        combo_RiskRating.SelectedIndex = 0
+        Action_Text_Box.Text = ""
+    End Sub
 
 
 #End Region
@@ -652,22 +759,74 @@ Public Class Form1
 
     Private Sub btn_savesettings_Click(sender As Object, e As EventArgs) Handles btn_savesettings.Click
         UpdateConnectionStringAndSave()
-        ' Try to open a connection to validate settings
+
         Try
             Using connection As New MySqlConnection(connectionString)
                 connection.Open()
+
+                ' ✅ Check if the table exists
+                Dim checkTableQuery As String = "
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = @database AND table_name = 'tb_mistroublereport';
+            "
+
+                Dim tableExists As Boolean = False
+
+                Using checkCmd As New MySqlCommand(checkTableQuery, connection)
+                    checkCmd.Parameters.AddWithValue("@database", My.Settings.Database)
+                    tableExists = Convert.ToInt32(checkCmd.ExecuteScalar()) > 0
+                End Using
+
+                ' ⚠️ If not exists, ask to create
+                If Not tableExists Then
+                    Dim result As DialogResult = MessageBox.Show(
+                        "The table 'tb_mistroublereport' was not found in the database. Do you want to create it?",
+                        "Table Not Found",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question
+                    )
+
+                    If result = DialogResult.Yes Then
+                        Dim createTableQuery As String = "
+                        CREATE TABLE tb_mistroublereport (
+                          id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                          start_date DATETIME NOT NULL,
+                          name VARCHAR(40) NOT NULL,
+                          department VARCHAR(30) DEFAULT NULL,
+                          ticket_number VARCHAR(50) NOT NULL,
+                          description TEXT,
+                          trouble_time DATETIME DEFAULT NULL,
+                          completed_time DATETIME DEFAULT NULL,
+                          level VARCHAR(20) DEFAULT NULL,
+                          risk_rating VARCHAR(50) DEFAULT NULL,
+                          action_description TEXT
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                    "
+
+                        Using createCmd As New MySqlCommand(createTableQuery, connection)
+                            createCmd.ExecuteNonQuery()
+                        End Using
+
+                        MessageBox.Show("Table created successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Else
+                        MessageBox.Show("Table creation skipped. You may encounter errors if the table is required.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    End If
+                End If
+
             End Using
+
             MessageBox.Show("Settings saved and connection successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
         Catch ex As Exception
             MessageBox.Show("Database connection failed: " & ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
-    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
-
+    Private Sub btn_ChangePassword_Click(sender As Object, e As EventArgs) Handles btn_ChangePassword.Click
+        Dim changeForm As New ChangePasswordForm()
+        changeForm.ShowDialog()
     End Sub
-
-
 
 
 #End Region

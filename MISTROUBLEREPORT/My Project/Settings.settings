@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
   <Profiles />
   <Settings>
-    <Setting Name="ConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"server=194.110.173.106;port=3306;database=bbox_logistics;user=bbox_logistics;password=1234;"</Value>
-    </Setting>
     <Setting Name="Server" Type="System.String" Scope="User">
       <Value Profile="(Default)">""</Value>
     </Setting>
@@ -19,6 +16,9 @@
     </Setting>
     <Setting Name="Password" Type="System.String" Scope="User">
       <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="AdminPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">admin</Value>
     </Setting>
   </Settings>
 </SettingsFile>
