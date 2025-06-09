@@ -135,10 +135,10 @@ Partial Class MainForm
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Controls.Add(Me.TabPage4)
-        Me.TabControl1.Location = New System.Drawing.Point(118, -19)
+        Me.TabControl1.Location = New System.Drawing.Point(118, -21)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(679, 471)
+        Me.TabControl1.Size = New System.Drawing.Size(679, 473)
         Me.TabControl1.TabIndex = 4
         '
         'TabPage1
@@ -155,7 +155,7 @@ Partial Class MainForm
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(671, 445)
+        Me.TabPage1.Size = New System.Drawing.Size(671, 428)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -660,6 +660,7 @@ Partial Class MainForm
         '
         'txt_password
         '
+        Me.txt_password.BackColor = System.Drawing.Color.LightGray
         Me.txt_password.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_password.Location = New System.Drawing.Point(14, 246)
         Me.txt_password.Name = "txt_password"
@@ -678,6 +679,7 @@ Partial Class MainForm
         '
         'txt_username
         '
+        Me.txt_username.BackColor = System.Drawing.Color.LightGray
         Me.txt_username.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_username.Location = New System.Drawing.Point(14, 200)
         Me.txt_username.Name = "txt_username"
@@ -686,6 +688,7 @@ Partial Class MainForm
         '
         'txt_server
         '
+        Me.txt_server.BackColor = System.Drawing.Color.LightGray
         Me.txt_server.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_server.Location = New System.Drawing.Point(14, 63)
         Me.txt_server.Name = "txt_server"
@@ -694,6 +697,7 @@ Partial Class MainForm
         '
         'txt_database
         '
+        Me.txt_database.BackColor = System.Drawing.Color.LightGray
         Me.txt_database.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_database.Location = New System.Drawing.Point(14, 154)
         Me.txt_database.Name = "txt_database"
@@ -702,6 +706,7 @@ Partial Class MainForm
         '
         'txt_port
         '
+        Me.txt_port.BackColor = System.Drawing.Color.LightGray
         Me.txt_port.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txt_port.Location = New System.Drawing.Point(14, 108)
         Me.txt_port.Name = "txt_port"
